@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">CryptoContact</string>
+
+    <string name="hello_world">Bem-vindo ao CryptoContact!</string>
+    <string name="action_settings">Configurações</string>
+</resources>
