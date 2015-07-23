@@ -1,5 +1,7 @@
 package br.unisinos.evertonlucas.cryptocontact;
 
+import android.security.KeyChain;
+import android.security.KeyChainAliasCallback;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,12 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.security.KeyStoreException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 import br.unisinos.evertonlucas.cryptocontact.service.KeyStoreService;
 
 
-public class Main extends ActionBarActivity {
+public class Main extends ActionBarActivity implements KeyChainAliasCallback {
 
     private TextView txtAliases;
     private Button button;
@@ -51,13 +54,28 @@ public class Main extends ActionBarActivity {
     }
 
     public void btnAtualizaAliases(View v) {
-        KeyStoreService service = new KeyStoreService();
+        KeyStoreService service = new KeyStoreService(this);
+        //service.instalarCertificadoCA();
+        service.instalarCertificado();
+
+        KeyChain.choosePrivateKeyAlias(this, this,
+                new String[]{"RSA"}, null, null, -1, null);
+
         try {
+
             List<String> aliases = service.getChaves();
             txtAliases.setText(aliases.toString());
+            X509Certificate cert = service.getCertificado();
+            if (cert != null)
+                txtAliases.setText(cert.getIssuerDN().toString());
         } catch (KeyStoreException e) {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void alias(String alias) {
+        System.out.println("Alias: " + alias);
     }
 }
