@@ -8,17 +8,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.security.KeyStoreException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
-import br.unisinos.evertonlucas.cryptocontact.service.KeyStoreService;
+import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificate;
+import br.unisinos.evertonlucas.cryptocontact.util.KeyStoreUtil;
 
 
-public class Main extends ActionBarActivity implements KeyChainAliasCallback {
+public class Main extends ActionBarActivity implements KeyChainAliasCallback, UpdateCertificate {
 
     private TextView txtAliases;
     private Button button;
@@ -54,21 +53,21 @@ public class Main extends ActionBarActivity implements KeyChainAliasCallback {
     }
 
     public void btnAtualizaAliases(View v) {
-        KeyStoreService service = new KeyStoreService(this);
-        //service.instalarCertificadoCA();
-        service.instalarCertificado();
+        KeyStoreUtil util = new KeyStoreUtil(this);
+        //util.installCertificate();
 
         KeyChain.choosePrivateKeyAlias(this, this,
                 new String[]{"RSA"}, null, null, -1, null);
 
         try {
 
-            List<String> aliases = service.getChaves();
+            List<String> aliases = util.getKeys();
             txtAliases.setText(aliases.toString());
-            X509Certificate cert = service.getCertificado();
+            util.readCertificate(this);
+            /*X509Certificate cert = util.getCertificado();
             if (cert != null)
-                txtAliases.setText(cert.getIssuerDN().toString());
-        } catch (KeyStoreException e) {
+                txtAliases.setText(cert.getIssuerDN().toString());*/
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -77,5 +76,10 @@ public class Main extends ActionBarActivity implements KeyChainAliasCallback {
     @Override
     public void alias(String alias) {
         System.out.println("Alias: " + alias);
+    }
+
+    @Override
+    public void updateCertificateInfo(X509Certificate certificate) {
+        txtAliases.setText(certificate.getSubjectDN().getName());
     }
 }
