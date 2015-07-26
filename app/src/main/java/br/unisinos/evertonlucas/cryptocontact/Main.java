@@ -14,6 +14,7 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificate;
+import br.unisinos.evertonlucas.cryptocontact.bizserv.KeyService;
 import br.unisinos.evertonlucas.cryptocontact.util.KeyStoreUtil;
 
 
@@ -21,6 +22,7 @@ public class Main extends ActionBarActivity implements KeyChainAliasCallback, Up
 
     private TextView txtAliases;
     private Button button;
+    private KeyService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class Main extends ActionBarActivity implements KeyChainAliasCallback, Up
         setContentView(R.layout.activity_main);
 
         txtAliases = (TextView) findViewById(R.id.txtAliases);
+        this.service = new KeyService(this);
     }
 
     @Override
@@ -53,20 +56,12 @@ public class Main extends ActionBarActivity implements KeyChainAliasCallback, Up
     }
 
     public void btnAtualizaAliases(View v) {
-        KeyStoreUtil util = new KeyStoreUtil(this);
-        //util.installCertificate();
-
-        KeyChain.choosePrivateKeyAlias(this, this,
-                new String[]{"RSA"}, null, null, -1, null);
-
+        /*KeyChain.choosePrivateKeyAlias(this, this,
+                new String[]{"RSA"}, null, null, -1, null);*/
         try {
-
-            List<String> aliases = util.getKeys();
-            txtAliases.setText(aliases.toString());
-            util.readCertificate(this);
-            /*X509Certificate cert = util.getCertificado();
-            if (cert != null)
-                txtAliases.setText(cert.getIssuerDN().toString());*/
+            String status = service.isCertificateAvailable() ?
+                    "Certificado Presente" : "Certificado Ausente";
+            txtAliases.setText(status);
         } catch (Exception e) {
             e.printStackTrace();
         }

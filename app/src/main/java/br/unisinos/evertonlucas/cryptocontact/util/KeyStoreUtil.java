@@ -2,6 +2,7 @@ package br.unisinos.evertonlucas.cryptocontact.util;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.security.KeyChain;
 import android.util.Log;
@@ -14,21 +15,26 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import br.unisinos.evertonlucas.cryptocontact.Main;
 import br.unisinos.evertonlucas.cryptocontact.async.CertificateReadAsyncTask;
+import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificate;
 
 /**
+ * Class responsible for communicate with KeyChain
  * Created by everton on 20/07/15.
  */
 public class KeyStoreUtil {
 
     private final Activity activity;
     private KeyStore keyStore;
+    private X509Certificate cert;
 
     public KeyStoreUtil(Activity activity) {
         this.activity = activity;
         try {
+            // TODO review the need about KeyStore
             keyStore = KeyStore.getInstance("AndroidCAStore");
             keyStore.load(null, null);
         } catch (Exception e) {
@@ -36,10 +42,10 @@ public class KeyStoreUtil {
         }
     }
 
-    public void installCertificate() {
+    public void installCertificate(String certFile) {
         try {
             Intent intent = KeyChain.createInstallIntent();
-            byte[] p12 = readFile("Download/Everton.p12");
+            byte[] p12 = readFile(certFile);
             intent.putExtra(KeyChain.EXTRA_PKCS12, p12);
             activity.startActivity(intent);
         } catch (Exception e) {
@@ -56,8 +62,9 @@ public class KeyStoreUtil {
         return result;
     }
 
-    public void readCertificate(Main context) {
-        CertificateReadAsyncTask asyncTask = new CertificateReadAsyncTask(context, context, "Everton");
+    public void readCertificate(UpdateCertificate update, String alias)
+            throws ExecutionException, InterruptedException {
+        CertificateReadAsyncTask asyncTask = new CertificateReadAsyncTask(activity, update, alias);
         asyncTask.execute();
     }
 

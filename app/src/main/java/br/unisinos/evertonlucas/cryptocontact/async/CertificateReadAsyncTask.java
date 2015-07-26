@@ -8,6 +8,8 @@ import android.util.Log;
 import java.security.cert.X509Certificate;
 
 /**
+ * Class responsible for read a certificate chain based on an alias.
+ * These class should be implemented as AsyncTask because getCertificateChain will block UI Thread
  * Created by everton on 24/07/15.
  */
 public class CertificateReadAsyncTask extends AsyncTask<Void, Void, X509Certificate> {
@@ -24,18 +26,17 @@ public class CertificateReadAsyncTask extends AsyncTask<Void, Void, X509Certific
 
     @Override
     protected X509Certificate doInBackground(Void... params) {
-        X509Certificate[] canal = null;
+        X509Certificate[] chain = null;
         try {
-            canal = KeyChain.getCertificateChain(ctx, alias);
+            chain = KeyChain.getCertificateChain(ctx, alias);
         } catch (Exception e) {
-            Log.e("CryptoContact", "Erro ao ler Certificado: " + e.getStackTrace());
+            Log.e("CryptoContact", "Error reading certificate: " + e.getStackTrace());
         }
-        return canal[0];
+        return chain[0];
     }
 
     @Override
     protected void onPostExecute(X509Certificate x509Certificate) {
         updateCertificate.updateCertificateInfo(x509Certificate);
-        super.onPostExecute(x509Certificate);
     }
 }
