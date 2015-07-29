@@ -8,19 +8,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.security.cert.X509Certificate;
 import java.util.List;
 
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificate;
+import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificateStatus;
 import br.unisinos.evertonlucas.cryptocontact.bizserv.KeyService;
 import br.unisinos.evertonlucas.cryptocontact.util.KeyStoreUtil;
 
 
-public class Main extends ActionBarActivity implements KeyChainAliasCallback, UpdateCertificate {
+public class Main extends ActionBarActivity implements UpdateCertificateStatus {
 
-    private TextView txtAliases;
     private Button button;
     private KeyService service;
 
@@ -29,8 +31,7 @@ public class Main extends ActionBarActivity implements KeyChainAliasCallback, Up
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtAliases = (TextView) findViewById(R.id.txtAliases);
-        this.service = new KeyService(this);
+        this.service = new KeyService(this, this);
     }
 
     @Override
@@ -56,25 +57,17 @@ public class Main extends ActionBarActivity implements KeyChainAliasCallback, Up
     }
 
     public void btnAtualizaAliases(View v) {
-        /*KeyChain.choosePrivateKeyAlias(this, this,
-                new String[]{"RSA"}, null, null, -1, null);*/
-        try {
-            String status = service.isCertificateAvailable() ?
-                    "Certificado Presente" : "Certificado Ausente";
-            txtAliases.setText(status);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // TODO Create onResume and onPause to avoid wrong status about the certificate presence
+        service.choosePrivateKeyAlias();
+    }
+
+    @Override
+    public void update(boolean status) {
+        ImageView imgView = (ImageView) findViewById(R.id.imgStatusDigCert);
+        if (status) {
+            imgView.setImageResource(R.drawable.ic_thumb_up);
+        } else {
+            imgView.setImageResource(R.drawable.ic_thumb_down);
         }
-
-    }
-
-    @Override
-    public void alias(String alias) {
-        System.out.println("Alias: " + alias);
-    }
-
-    @Override
-    public void updateCertificateInfo(X509Certificate certificate) {
-        txtAliases.setText(certificate.getSubjectDN().getName());
     }
 }

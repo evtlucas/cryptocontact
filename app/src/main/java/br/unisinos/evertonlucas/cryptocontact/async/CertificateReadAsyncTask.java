@@ -31,6 +31,7 @@ public class CertificateReadAsyncTask extends AsyncTask<Void, Void, X509Certific
             chain = KeyChain.getCertificateChain(ctx, alias);
         } catch (Exception e) {
             Log.e("CryptoContact", "Error reading certificate: " + e.getStackTrace());
+            return null;
         }
         return chain[0];
     }

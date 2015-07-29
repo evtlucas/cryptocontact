@@ -1,24 +1,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:id="@+id/main"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Main">
+    android:background="@color/background_color"
+    tools:context=".Main">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/txtAppName1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/left_text_app_name_margin"
+            android:layout_marginTop="@dimen/top_app_name_margin"
+            android:text="@string/app_name1"
+            android:textStyle="bold"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/font_size_logo"/>
+
+        <TextView
+            android:text="@string/app_name2"
+            android:id="@+id/txtAppName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/left_text_app_name_margin"
+            android:layout_marginBottom="@dimen/bottom_text_app_name_margin"
+            android:layout_below="@+id/txtAppName1"
+            android:textStyle="bold"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/font_size_logo" />
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_marginTop="@dimen/top_app_name_margin"
+            android:layout_marginLeft="@dimen/left_image_margin"
+            android:layout_marginRight="@dimen/right_app_name_margin"
+            android:src="@drawable/lock"
+            android:layout_toRightOf="@+id/txtAppName1"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:text="Atualizar"
-        android:onClick="btnAtualizaAliases"/>
+        android:background="@color/item_color">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtAliases"/>
+        <TextView
+            android:id="@+id/txtDigCert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/left_text_app_name_margin"
+            android:layout_marginTop="@dimen/top_dig_cert_margin"
+            android:text="@string/digital_certificate"
+            android:textSize="@dimen/font_size_dig_cert"
+            android:textStyle="bold"
+            android:textColor="@color/text_color_dig_cert"/>
+
+        <ImageView
+            android:id="@+id/imgStatusDigCert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/left_text_app_name_margin"
+            android:layout_marginBottom="@dimen/bottom_dig_cert_margin"
+            android:layout_below="@+id/txtDigCert"
+            android:src="@drawable/ic_thumb_up"/>
+
+        <Button
+            android:id="@+id/btnInstDigCert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imgStatusDigCert"
+            android:layout_below="@+id/txtDigCert"
+            android:layout_marginLeft="50dp"
+            android:text="@string/txt_btn_dig_cert"
+            android:onClick="btnAtualizaAliases"/>
+    </RelativeLayout>
+
+
 
 </LinearLayout>
