@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 import javax.crypto.SecretKey;
 
+import br.unisinos.evertonlucas.cryptocontact.util.KeyGenerationUtil;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

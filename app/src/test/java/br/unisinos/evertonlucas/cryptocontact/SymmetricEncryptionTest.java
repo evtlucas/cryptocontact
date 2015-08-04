@@ -11,6 +11,9 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+import br.unisinos.evertonlucas.cryptocontact.encryption.SymmetricEncryption;
+import br.unisinos.evertonlucas.cryptocontact.util.KeyGenerationUtil;
+
 import static org.junit.Assert.*;
 
 /**

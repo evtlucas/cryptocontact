@@ -1,4 +1,4 @@
-package br.unisinos.evertonlucas.cryptocontact;
+package br.unisinos.evertonlucas.cryptocontact.util;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

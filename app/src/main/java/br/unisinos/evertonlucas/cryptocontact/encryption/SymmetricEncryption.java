@@ -1,4 +1,4 @@
-package br.unisinos.evertonlucas.cryptocontact;
+package br.unisinos.evertonlucas.cryptocontact.encryption;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
