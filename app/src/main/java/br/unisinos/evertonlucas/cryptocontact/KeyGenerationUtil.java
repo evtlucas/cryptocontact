@@ -14,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class KeyGenerationUtil {
     public static SecretKey generate() throws NoSuchAlgorithmException {
         KeyGenerator gen = KeyGenerator.getInstance("AES");
-        gen.init(256);
+        gen.init(128);
         SecretKey key = gen.generateKey();
         return key;
     }
