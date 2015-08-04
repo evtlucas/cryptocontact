@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="font_size_logo">40sp</dimen>
-    <dimen name="left_text_app_name_margin">25dp</dimen>
+    <dimen name="horizontal_app_margin">25dp</dimen>
     <dimen name="bottom_text_app_name_margin">50dp</dimen>
     <dimen name="top_app_name_margin">50dp</dimen>
     <dimen name="right_app_name_margin">25dp</dimen>

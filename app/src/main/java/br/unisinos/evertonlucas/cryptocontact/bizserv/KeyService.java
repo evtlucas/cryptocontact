@@ -10,9 +10,14 @@ import android.util.Log;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.ExecutionException;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificate;
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificateStatus;
+import br.unisinos.evertonlucas.cryptocontact.model.CertificateBag;
 import br.unisinos.evertonlucas.cryptocontact.util.KeyStoreUtil;
+import br.unisinos.evertonlucas.cryptocontact.util.SharedPrefUtil;
 
 /**
  * Class responsible for manage keys
@@ -25,14 +30,15 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback {
     private final UpdateCertificateStatus certStatus;
     private Activity activity;
     private final KeyStoreUtil util;
-    private X509Certificate cert = null;
+    private CertificateBag cert = null;
+    private boolean generatePrivateKey = false;
 
     public KeyService(UpdateCertificateStatus certStatus, Activity activity) {
         this.certStatus = certStatus;
         this.activity = activity;
         util = new KeyStoreUtil(activity);
         try {
-            util.readCertificate(this, getAlias());
+            readCertificate(getAlias());
         } catch (Exception e) {
             cert = null;
             Log.e("CryptoContact", "Error during KeyService creation: " +
@@ -40,37 +46,61 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback {
         }
     }
 
+    private void readCertificate(String alias) throws ExecutionException, InterruptedException {
+        util.readCertificate(this, alias);
+    }
+
     private String getAlias() {
-        // TODO Create class for reading from and write to SharedPreferences.
-        SharedPreferences pref = activity.getSharedPreferences(KEYCHAIN_PREF, Context.MODE_PRIVATE);
-        return pref.getString(KEYCHAIN_PREF_ALIAS, "");
+        return SharedPrefUtil.readFrom(this.activity, KEYCHAIN_PREF, KEYCHAIN_PREF_ALIAS);
     }
 
     public boolean isCertificateAvailable() {
         return cert != null;
     }
 
-    public void choosePrivateKeyAlias() {
-        KeyChain.choosePrivateKeyAlias(this.activity, this, new String[]{"RSA"}, null, null, -1, null);
+    public void installCertificate() {
+        this.util.choosePrivateKeyAlias(this);
     }
 
     @Override
-    public void updateCertificateInfo(X509Certificate cert) {
+    public void updateCertificateInfo(CertificateBag cert) {
         this.cert = cert;
         certStatus.update(isCertificateAvailable());
+        // TODO generate and save private key
+        if (generatePrivateKey) {
+            generatePrivateKey = false;
+        }
     }
 
     @Override
     public void alias(String alias) {
-        SharedPreferences pref = activity.getSharedPreferences(KEYCHAIN_PREF, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(KEYCHAIN_PREF_ALIAS, alias);
-        editor.commit();
+        // This method is called as a callback for KeyChain.choosePrivateKeyAlias
+        SharedPrefUtil.writeTo(this.activity, KEYCHAIN_PREF, KEYCHAIN_PREF_ALIAS, alias);
         try {
-            util.readCertificate(this, alias);
+            readCertificate(alias);
+            generatePrivateKey = true;
         } catch (Exception e) {
             cert = null;
             Log.e("CryptoContact", "Error during KeyService definition: " +
+                    e.getMessage() + "\n\r" + e.getStackTrace().toString());
+        }
+    }
+
+    /*private SecretKeySpec readSecretKeySharedPref() {
+        String key = SharedPrefUtil.readFrom(this.activity, KEYCHAIN_PREF, "secret");
+        if (key.trim().length() == 0)
+            return null;
+        byte[] bytes = key.getBytes();
+        SecretKeySpec secretKeySpec = new SecretKeySpec(bytes, "AES");
+        return secretKeySpec;
+    }*/
+
+    public void reReadCertificate() {
+        try {
+            readCertificate(getAlias());
+        } catch (Exception e) {
+            cert = null;
+            Log.e("CryptoContact", "Error during KeyService new read: " +
                     e.getMessage() + "\n\r" + e.getStackTrace().toString());
         }
     }

@@ -1,7 +1,5 @@
 package br.unisinos.evertonlucas.cryptocontact;
 
-import android.security.KeyChain;
-import android.security.KeyChainAliasCallback;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,16 +7,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.security.cert.X509Certificate;
-import java.util.List;
-
-import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificate;
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificateStatus;
 import br.unisinos.evertonlucas.cryptocontact.bizserv.KeyService;
-import br.unisinos.evertonlucas.cryptocontact.util.KeyStoreUtil;
 
 
 public class Main extends ActionBarActivity implements UpdateCertificateStatus {
@@ -32,6 +23,12 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus {
         setContentView(R.layout.activity_main);
 
         this.service = new KeyService(this, this);
+    }
+
+    @Override
+    protected void onResume() {
+        this.service.reReadCertificate();
+        super.onResume();
     }
 
     @Override
@@ -56,9 +53,9 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus {
         return super.onOptionsItemSelected(item);
     }
 
-    public void btnAtualizaAliases(View v) {
+    public void btnInstallCertificate(View v) {
         // TODO Create onResume and onPause to avoid wrong status about the certificate presence
-        service.choosePrivateKeyAlias();
+        service.installCertificate();
     }
 
     @Override

@@ -1,88 +1,95 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/main"
     android:background="@color/background_color"
+    android:orientation="vertical"
     tools:context=".Main">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:columnCount="2">
 
         <TextView
             android:id="@+id/txtAppName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/left_text_app_name_margin"
+            android:layout_column="0"
+            android:layout_gravity="top"
+            android:layout_marginLeft="@dimen/horizontal_app_margin"
             android:layout_marginTop="@dimen/top_app_name_margin"
             android:text="@string/app_name1"
-            android:textStyle="bold"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/font_size_logo"/>
+            android:textSize="@dimen/font_size_logo"
+            android:textStyle="bold" />
 
         <TextView
-            android:text="@string/app_name2"
             android:id="@+id/txtAppName2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/left_text_app_name_margin"
+            android:layout_column="0"
+            android:layout_gravity="start|bottom"
             android:layout_marginBottom="@dimen/bottom_text_app_name_margin"
-            android:layout_below="@+id/txtAppName1"
-            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/horizontal_app_margin"
+            android:text="@string/app_name2"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/font_size_logo" />
-        
+            android:textSize="@dimen/font_size_logo"
+            android:textStyle="bold"
+            android:layout_marginRight="@dimen/horizontal_app_margin" />
+
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_marginTop="@dimen/top_app_name_margin"
-            android:layout_marginLeft="@dimen/left_image_margin"
-            android:layout_marginRight="@dimen/right_app_name_margin"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:layout_rowSpan="2"
+            android:layout_marginRight="@dimen/horizontal_app_margin"
             android:src="@drawable/lock"
-            android:layout_toRightOf="@+id/txtAppName1"
-            android:layout_alignParentRight="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_gravity="center_vertical|right" />
 
-    </RelativeLayout>
+    </GridLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:columnCount="2"
         android:background="@color/item_color">
 
         <TextView
             android:id="@+id/txtDigCert"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/left_text_app_name_margin"
+            android:layout_marginLeft="@dimen/horizontal_app_margin"
             android:layout_marginTop="@dimen/top_dig_cert_margin"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
             android:text="@string/digital_certificate"
+            android:textColor="@color/text_color_dig_cert"
             android:textSize="@dimen/font_size_dig_cert"
-            android:textStyle="bold"
-            android:textColor="@color/text_color_dig_cert"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imgStatusDigCert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/left_text_app_name_margin"
-            android:layout_marginBottom="@dimen/bottom_dig_cert_margin"
             android:layout_below="@+id/txtDigCert"
-            android:src="@drawable/ic_thumb_up"/>
+            android:layout_marginBottom="@dimen/bottom_dig_cert_margin"
+            android:layout_marginLeft="@dimen/horizontal_app_margin"
+            android:src="@drawable/ic_thumb_up" />
 
         <Button
             android:id="@+id/btnInstDigCert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imgStatusDigCert"
             android:layout_below="@+id/txtDigCert"
-            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/imgStatusDigCert"
+            android:onClick="btnInstallCertificate"
             android:text="@string/txt_btn_dig_cert"
-            android:onClick="btnAtualizaAliases"/>
-    </RelativeLayout>
-
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/horizontal_app_margin" />
+    </GridLayout>
 
 
 </LinearLayout>
