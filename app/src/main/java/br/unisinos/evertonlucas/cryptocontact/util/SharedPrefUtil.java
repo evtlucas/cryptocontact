@@ -3,21 +3,39 @@ package br.unisinos.evertonlucas.cryptocontact.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 /**
  * Created by everton on 02/08/15.
  */
 public class SharedPrefUtil {
 
-    public static String readFrom(Activity activity, String name, String key) {
-        SharedPreferences pref = activity.getSharedPreferences(name, Context.MODE_PRIVATE);
+    public static String readFrom(Context context, String name, String key) {
+        SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
         return pref.getString(key, "");
     }
 
-    public static void writeTo(Activity activity, String name, String key, String value) {
-        SharedPreferences pref = activity.getSharedPreferences(name, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
+    public static byte[] readByteFrom(Context context, String name, String key) {
+        SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        byte[] result = Base64.decode(pref.getString(key, ""), Base64.DEFAULT);
+        return result;
+    }
+
+    public static void writeTo(Context context, String name, String key, String value) {
+        SharedPreferences.Editor editor = getEditor(context, name);
         editor.putString(key, value);
+        editor.commit();
+    }
+
+    private static SharedPreferences.Editor getEditor(Context context, String name) {
+        SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        return pref.edit();
+    }
+
+    public static void writeByteTo(Context context, String name, String key, byte[] value) {
+        String stringValue = Base64.encodeToString(value, Base64.DEFAULT);
+        SharedPreferences.Editor editor = getEditor(context, name);
+        editor.putString(key, stringValue);
         editor.commit();
     }
 }

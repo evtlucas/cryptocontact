@@ -4,7 +4,8 @@
     <string name="app_name2">Contact</string>
 
     <string name="hello_world">Bem-vindo ao CryptoContact!</string>
-    <string name="action_settings">Configurações</string>
+    <string name="backup">Salvar chave</string>
+    <string name="restore">Recuperar chave</string>
     <string name="digital_certificate">Certificado Digital</string>
     <string name="txt_btn_dig_cert">Instalar</string>
 </resources>
