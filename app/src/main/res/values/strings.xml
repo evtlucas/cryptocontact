@@ -8,4 +8,10 @@
     <string name="restore">Recuperar chave</string>
     <string name="digital_certificate">Certificado Digital</string>
     <string name="txt_btn_dig_cert">Instalar</string>
+    <string name="backup_message">Confirma o backup da chave de acesso?</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="empty_key">Os dados criptográficos não foram criados</string>
+    <string name="export_key_success">Arquivo data.crypto salvo com sucesso em Downloads</string>
+    <string name="export_key_exception">Exceção ao salvar arquivo data.crypto\"\\n\\r\"</string>
 </resources>

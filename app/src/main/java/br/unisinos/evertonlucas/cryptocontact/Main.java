@@ -1,18 +1,24 @@
 package br.unisinos.evertonlucas.cryptocontact;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificateStatus;
 import br.unisinos.evertonlucas.cryptocontact.bizserv.KeyService;
+import br.unisinos.evertonlucas.cryptocontact.util.ConfirmationDialog;
 
 
-public class Main extends ActionBarActivity implements UpdateCertificateStatus {
+public class Main extends ActionBarActivity implements UpdateCertificateStatus,
+        ConfirmationDialog.ConfirmationDialogListener{
 
     private Button button;
     private KeyService service;
@@ -47,6 +53,7 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_backup) {
+            service.saveCryptographicKey();
             return true;
         }
 
@@ -66,5 +73,10 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus {
         } else {
             imgView.setImageResource(R.drawable.ic_thumb_down);
         }
+    }
+
+    @Override
+    public void onConfirmationPositive() {
+        Toast.makeText(this, "Clicado", Toast.LENGTH_LONG).show();
     }
 }

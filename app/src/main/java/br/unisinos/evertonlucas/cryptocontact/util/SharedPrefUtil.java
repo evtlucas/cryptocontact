@@ -10,6 +10,10 @@ import android.util.Base64;
  */
 public class SharedPrefUtil {
 
+    public static final String KEYCHAIN_PREF = "keychain";
+    public static final String KEYCHAIN_PREF_ALIAS = "alias";
+    public static final String KEYCHAIN_PREF_KEY = "key";
+
     public static String readFrom(Context context, String name, String key) {
         SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
         return pref.getString(key, "");
@@ -17,7 +21,10 @@ public class SharedPrefUtil {
 
     public static byte[] readByteFrom(Context context, String name, String key) {
         SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
-        byte[] result = Base64.decode(pref.getString(key, ""), Base64.DEFAULT);
+        String value = pref.getString(key, "");
+        if (value.trim().length() == 0)
+            return new byte[0];
+        byte[] result = Base64.decode(value, Base64.DEFAULT);
         return result;
     }
 
