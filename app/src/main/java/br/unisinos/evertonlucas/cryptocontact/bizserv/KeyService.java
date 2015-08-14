@@ -36,15 +36,6 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback {
         this.activity = activity;
         util = new KeyStoreUtil(activity);
         this.persist = new PersistCriptoData();
-        /*try {
-            // TODO revisar necessidade dessa leitura, uma vez que ela ocorre durante o onResume
-            readCertificate(getAlias());
-        } catch (Exception e) {
-            cert = null;
-            Log.e(this.activity.getResources().getString(R.string.app_name),
-                    "Error during KeyService creation: " +
-                    e.getMessage() + "\n\r" + e.getStackTrace().toString());
-        }*/
     }
 
     public boolean isCertificateAvailable() {
