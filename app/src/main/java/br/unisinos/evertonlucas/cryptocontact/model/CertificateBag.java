@@ -23,4 +23,8 @@ public class CertificateBag {
     public X509Certificate getCert() {
         return cert;
     }
+
+    public boolean isValid() {
+        return cert != null && privateKey != null;
+    }
 }

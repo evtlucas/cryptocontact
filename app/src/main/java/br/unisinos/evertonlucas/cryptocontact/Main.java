@@ -1,8 +1,5 @@
 package br.unisinos.evertonlucas.cryptocontact;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -52,9 +49,14 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus,
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_backup) {
-            service.saveCryptographicKey();
-            return true;
+
+        switch (id) {
+            case R.id.action_backup:
+                service.exportCryptographicKey();
+                return true;
+            case R.id.action_restore:
+                service.importCryptographicKey();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

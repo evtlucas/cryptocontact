@@ -2,6 +2,7 @@ package br.unisinos.evertonlucas.cryptocontact.encryption;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -17,18 +18,18 @@ public class AssymetricEncryption {
     private Cipher encCipher;
     private Cipher decCipher;
 
-    public AssymetricEncryption(CertificateBag bag) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    public AssymetricEncryption(CertificateBag bag) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException {
         initEncCipher(bag);
         initDecCipher(bag);
     }
 
-    private void initDecCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
-        this.decCipher = Cipher.getInstance("RSA");
+    private void initDecCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
+        this.decCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
         this.decCipher.init(Cipher.DECRYPT_MODE, bag.getCert().getPublicKey());
     }
 
-    private void initEncCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
-        this.encCipher = Cipher.getInstance("RSA");
+    private void initEncCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
+        this.encCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
         this.encCipher.init(Cipher.ENCRYPT_MODE, bag.getPrivateKey());
     }
 

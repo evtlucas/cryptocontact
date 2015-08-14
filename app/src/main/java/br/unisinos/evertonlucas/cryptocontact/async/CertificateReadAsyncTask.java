@@ -40,7 +40,7 @@ public class CertificateReadAsyncTask extends AsyncTask<Void, Void, CertificateB
             bag = new CertificateBag(chain[0], privateKey);
         } catch (Exception e) {
             Log.e("CryptoContact", "Error reading certificate bag: " + e.getStackTrace());
-            return null;
+            return new CertificateBag(null, null);
         }
         return bag;
     }
