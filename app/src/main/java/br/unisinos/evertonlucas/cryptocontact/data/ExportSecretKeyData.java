@@ -3,6 +3,7 @@ package br.unisinos.evertonlucas.cryptocontact.data;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 
 import br.unisinos.evertonlucas.cryptocontact.R;
 import br.unisinos.evertonlucas.cryptocontact.encryption.AssymetricEncryption;
@@ -27,19 +29,19 @@ import static android.widget.Toast.*;
  * Class responsible for export cryptographic key
  * Created by everton on 09/08/15.
  */
-public class ExportCryptoKeyData implements ConfirmationDialog.ConfirmationDialogListener {
+public class ExportSecretKeyData implements ConfirmationDialog.ConfirmationDialogListener {
 
     private Activity activity;
     private byte[] key = null;
 
-    public ExportCryptoKeyData(Activity context) {
+    public ExportSecretKeyData(Activity context) {
         this.activity = context;
     }
 
     @Override
     public void onConfirmationPositive() {
         try {
-            File exportFile = getFile();
+            File exportFile = DataUtil.getFile();
             if (exportFile.exists())
                 exportFile.delete();
             FileOutputStream file = new FileOutputStream(exportFile);
@@ -48,27 +50,19 @@ public class ExportCryptoKeyData implements ConfirmationDialog.ConfirmationDialo
             file.close();
             makeText(this.activity, this.activity.getResources().getString(R.string.export_key_success), LENGTH_LONG).show();
         } catch (Exception e) {
-            makeText(this.activity, this.activity.getResources().getString(R.string.export_key_exception) + e.getMessage(),
-                    LENGTH_LONG).show();
-            Log.e(this.activity.getResources().getString(R.string.app_name),
-                    this.activity.getResources().getString(R.string.export_key_exception) +
-                            e.getMessage() + "\n\r" + e.getStackTrace().toString());
+            throwException(e, activity);
         }
     }
 
-    private File getFile() {
-        File dowloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        String name = dowloadDir.getAbsolutePath() + "/data.crypto";
-        return new File(name);
+    public static void throwException(Exception e, Activity activity) {
+        makeText(activity, activity.getResources().getString(R.string.export_key_exception) + e.getMessage(),
+                LENGTH_LONG).show();
+        Log.e(activity.getResources().getString(R.string.app_name),
+                activity.getResources().getString(R.string.export_key_exception) +
+                        e.getMessage() + "\n\r" + e.getStackTrace().toString());
     }
 
-    public void export() {
-        byte[] key = SharedPrefUtil.readByteFrom(this.activity,
-                SharedPrefUtil.KEYCHAIN_PREF, SharedPrefUtil.KEYCHAIN_PREF_KEY);
-        if (key.length == 0) {
-            makeText(this.activity, R.string.empty_key, LENGTH_LONG).show();
-            return;
-        }
+    public void export(byte[] key) {
         this.key = key;
         ConfirmationDialog confirmationDialog = ConfirmationDialog.newInstance(this);
         confirmationDialog.setTitle(R.string.backup)

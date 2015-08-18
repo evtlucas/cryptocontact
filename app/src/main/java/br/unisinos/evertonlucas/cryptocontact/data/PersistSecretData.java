@@ -20,7 +20,7 @@ import static android.widget.Toast.makeText;
  * Class responsible for persist private key and its alias
  * Created by everton on 11/08/15.
  */
-public class PersistCriptoData {
+public class PersistSecretData {
 
     public SecretKey readPrivateKey(CertificateBag cert, Context context) {
         SecretKey pKey = null;

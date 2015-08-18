@@ -4,15 +4,26 @@ import android.app.Activity;
 import android.security.KeyChainAliasCallback;
 import android.util.Log;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.concurrent.ExecutionException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import br.unisinos.evertonlucas.cryptocontact.R;
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificate;
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificateStatus;
-import br.unisinos.evertonlucas.cryptocontact.data.ExportCryptoKeyData;
-import br.unisinos.evertonlucas.cryptocontact.data.PersistCriptoData;
+import br.unisinos.evertonlucas.cryptocontact.data.ExportSecretKeyData;
+import br.unisinos.evertonlucas.cryptocontact.data.ImportSecretKeyData;
+import br.unisinos.evertonlucas.cryptocontact.data.PersistSecretData;
+import br.unisinos.evertonlucas.cryptocontact.data.UpdateSecretKey;
+import br.unisinos.evertonlucas.cryptocontact.encryption.Algorithms;
+import br.unisinos.evertonlucas.cryptocontact.encryption.AssymetricEncryption;
 import br.unisinos.evertonlucas.cryptocontact.model.CertificateBag;
 import br.unisinos.evertonlucas.cryptocontact.util.KeyStoreUtil;
 import br.unisinos.evertonlucas.cryptocontact.util.SharedPrefUtil;
@@ -21,21 +32,21 @@ import br.unisinos.evertonlucas.cryptocontact.util.SharedPrefUtil;
  * Class responsible for manage keys
  * Created by everton on 26/07/15.
  */
-public class KeyService implements UpdateCertificate, KeyChainAliasCallback {
+public class KeyService implements UpdateCertificate, KeyChainAliasCallback, UpdateSecretKey {
 
     private final UpdateCertificateStatus certStatus;
     private Activity activity;
+    private boolean generatePrivateKey = false;
     private final KeyStoreUtil util;
     private CertificateBag cert = null;
-    private boolean generatePrivateKey = false;
     private SecretKey key = null;
-    private PersistCriptoData persist;
+    private PersistSecretData persist;
 
     public KeyService(UpdateCertificateStatus certStatus, Activity activity) {
         this.certStatus = certStatus;
         this.activity = activity;
         util = new KeyStoreUtil(activity);
-        this.persist = new PersistCriptoData();
+        this.persist = new PersistSecretData();
     }
 
     public boolean isCertificateAvailable() {
@@ -90,7 +101,7 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback {
             readCertificate(alias);
             generatePrivateKey = true;
         } catch (Exception e) {
-            cert = null;
+            cert = new CertificateBag(null, null);
             Log.e(this.activity.getResources().getString(R.string.app_name),
                     "Error during KeyService definition: " +
                     e.getMessage() + "\n\r" + e.getStackTrace().toString());
@@ -101,19 +112,33 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback {
         try {
             readCertificate(getAlias());
         } catch (Exception e) {
-            cert = null;
+            cert = new CertificateBag(null, null);
             Log.e(this.activity.getResources().getString(R.string.app_name),
                     "Error during KeyService new read: " +
                     e.getMessage() + "\n\r" + e.getStackTrace().toString());
         }
     }
 
-    public void exportCryptographicKey() {
-        ExportCryptoKeyData data = new ExportCryptoKeyData(this.activity);
-        data.export();
+    public void exportCryptographicKey() throws NoSuchProviderException, InvalidKeyException,
+            NoSuchAlgorithmException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException {
+        ExportSecretKeyData data = new ExportSecretKeyData(this.activity);
+        byte[] encoded = new AssymetricEncryption(this.cert).encrypt(this.key.getEncoded());
+        data.export(encoded);
     }
 
     public void importCryptographicKey() {
+        ImportSecretKeyData data = new ImportSecretKeyData(this, this.activity);
+        data.importData();
+    }
 
+    @Override
+    public void update(byte[] key) {
+        try {
+            byte[] decoded = new AssymetricEncryption(this.cert).decrypt(key);
+            SecretKey skey = new SecretKeySpec(decoded, Algorithms.SYMMETRIC);
+            this.key = skey;
+        } catch (Exception e) {
+            ImportSecretKeyData.throwException(e, this.activity);
+        }
     }
 }

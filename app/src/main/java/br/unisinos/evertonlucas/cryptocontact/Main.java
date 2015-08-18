@@ -9,8 +9,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import br.unisinos.evertonlucas.cryptocontact.async.UpdateCertificateStatus;
 import br.unisinos.evertonlucas.cryptocontact.bizserv.KeyService;
+import br.unisinos.evertonlucas.cryptocontact.data.ExportSecretKeyData;
 import br.unisinos.evertonlucas.cryptocontact.util.ConfirmationDialog;
 
 
@@ -46,13 +55,16 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus,
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        int id = item.getItemId();
 
         switch (id) {
             case R.id.action_backup:
-                service.exportCryptographicKey();
+                try {
+                    service.exportCryptographicKey();
+                } catch (Exception e) {
+                    ExportSecretKeyData.throwException(e, this);
+                }
                 return true;
             case R.id.action_restore:
                 service.importCryptographicKey();
@@ -63,7 +75,6 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus,
     }
 
     public void btnInstallCertificate(View v) {
-        // TODO Create onResume and onPause to avoid wrong status about the certificate presence
         service.installCertificate();
     }
 

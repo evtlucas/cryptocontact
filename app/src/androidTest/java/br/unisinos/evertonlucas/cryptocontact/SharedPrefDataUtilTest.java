@@ -11,9 +11,10 @@ import br.unisinos.evertonlucas.cryptocontact.util.RenamingMockContext;
 import br.unisinos.evertonlucas.cryptocontact.util.SharedPrefUtil;
 
 /**
+ * Tests about SharedPrefUtil class
  * Created by everton on 08/08/15.
  */
-public class SharedPrefUtilTest extends AndroidTestCase {
+public class SharedPrefDataUtilTest extends AndroidTestCase {
 
     private static final String KEYCHAIN_PREF = "keychain";
     private static final String KEYCHAIN_PREF_ALIAS = "alias";

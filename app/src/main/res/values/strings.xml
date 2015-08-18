@@ -14,4 +14,10 @@
     <string name="empty_key">Os dados criptográficos não foram criados</string>
     <string name="export_key_success">Arquivo data.crypto salvo com sucesso em Downloads</string>
     <string name="export_key_exception">Exceção ao salvar arquivo data.crypto\"\\n\\r\"</string>
+    <string name="export">Exportar chave</string>
+    <string name="export_message">Confirma a exportação da chave de acesso?</string>
+    <string name="import_key_exception">Exceção ao ler arquivo data.crypto\\\"\\\\n\\\\r\\\"</string>
+    <string name="import_key">Importar chave</string>
+    <string name="import_message">Confirma a importação da chave de acesso?</string>
+    <string name="file_not_found">Arquivo de chave de acesso não encontrado</string>
 </resources>
