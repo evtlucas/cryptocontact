@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CryptoContact.iml" filepath="$PROJECT_DIR$/CryptoContact.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/passshelter.iml" filepath="$PROJECT_DIR$/passshelter.iml" />
     </modules>
   </component>
 </project>
