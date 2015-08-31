@@ -17,6 +17,7 @@ import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.util.KeyGenerationUtil;
 
 /**
+ * Class responsible for test Resource object
  * Created by everton on 30/08/15.
  */
 public class ResourceTest extends TestCase {
@@ -60,5 +61,25 @@ public class ResourceTest extends TestCase {
         byte[] cryptoPassword = resource.getCryptoPassword();
         byte[] decryptedPassword = this.encryption.decrypt(cryptoPassword);
         assertTrue(Arrays.equals(this.password.getBytes(), decryptedPassword));
+    }
+
+    public void testDefineCryptoUserReturnPlainText() throws IllegalBlockSizeException,
+            InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
+            NoSuchPaddingException {
+        Resource resource = getResource(facebook, this.user, password);
+        String user = "test";
+        byte[] cryptoUser = this.encryption.encrypt(user.getBytes());
+        resource.setCryptoUser(cryptoUser);
+        assertEquals(user, resource.getUser());
+    }
+
+    public void testDefineCryptoPasswordReturnPlainText() throws IllegalBlockSizeException,
+            InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
+            NoSuchPaddingException {
+        Resource resource = getResource(facebook, this.user, this.password);
+        String password = "abcxyz";
+        byte[] cryptoPassword = this.encryption.encrypt(password.getBytes());
+        resource.setCryptoPassword(cryptoPassword);
+        assertEquals(password, resource.getPassword());
     }
 }

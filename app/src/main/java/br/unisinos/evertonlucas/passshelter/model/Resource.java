@@ -13,6 +13,7 @@ import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
  * Created by everton on 30/08/15.
  */
 public class Resource {
+    private Long id;
     private String name;
     private String user;
     private String password;
@@ -21,6 +22,14 @@ public class Resource {
 
     public Resource(SymmetricEncryption encryption) {
         this.encryption = encryption;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -55,5 +64,17 @@ public class Resource {
     public byte[] getCryptoPassword() throws IllegalBlockSizeException, InvalidKeyException,
             BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         return this.encryption.encrypt(this.password.getBytes());
+    }
+
+    public void setCryptoUser(byte[] cryptoUser) throws IllegalBlockSizeException,
+            InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
+            NoSuchPaddingException {
+        this.user = new String(this.encryption.decrypt(cryptoUser));
+    }
+
+    public void setCryptoPassword(byte[] cryptoPassword) throws IllegalBlockSizeException,
+            InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
+            NoSuchPaddingException {
+        this.password = new String(this.encryption.decrypt(cryptoPassword));
     }
 }
