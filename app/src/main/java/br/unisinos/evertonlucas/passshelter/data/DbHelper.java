@@ -13,6 +13,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE = "db";
     private static final int VERSION = 1;
     public static final String RESOURCE = "resource";
+    public static final String[] RESOURCE_COLUMNS = new String[] { "_id", "name", "user", "password"};
 
     public DbHelper(Context context) {
         super(context, DATABASE, null, VERSION);
@@ -20,7 +21,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE resource (_id INTEGER PRIMARY KEY, name TEXT, user BLOB, password BLOB)");
+        db.execSQL("CREATE TABLE resource (_id INTEGER PRIMARY KEY, name TEXT unique, user BLOB, password BLOB)");
     }
 
     @Override
