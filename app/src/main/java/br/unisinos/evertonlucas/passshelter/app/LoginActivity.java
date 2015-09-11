@@ -19,6 +19,7 @@ import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateCertificateStatus;
 import br.unisinos.evertonlucas.passshelter.bizserv.InstallService;
 import br.unisinos.evertonlucas.passshelter.bizserv.KeyService;
+import br.unisinos.evertonlucas.passshelter.bizserv.LoginService;
 import br.unisinos.evertonlucas.passshelter.rep.UserRep;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements UpdateCertificat
     private InstallService installService;
     private ProgressDialog progressDialog;
     private KeyService keyService;
+    private LoginService loginService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,14 @@ public class LoginActivity extends AppCompatActivity implements UpdateCertificat
     }
 
     public void btnLogin(View view) {
-
+        try {
+            if (!this.loginService.login(this.txtLoginPassword.getText().toString())) {
+                Toast.makeText(this, "Senha errada", Toast.LENGTH_LONG).show();
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Toast.makeText(this, "Exceção ao salvar usuário " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("Pass Shelter", "Exceção ao salvar usuário", e);
+        }
     }
 
     @Override
@@ -85,5 +94,6 @@ public class LoginActivity extends AppCompatActivity implements UpdateCertificat
         progressDialog.dismiss();
         this.installService.setContext(this);
         this.userRep = PassShelterApp.createUserRep(this, keyService.getSymmetricEncryption());
+        this.loginService = new LoginService(this, this.userRep, this.installService);
     }
 }
