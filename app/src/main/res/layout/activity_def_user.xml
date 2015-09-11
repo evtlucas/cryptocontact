@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_def_user"
+        android:textSize="@dimen/font_size_dig_cert"
+        android:layout_marginLeft="@dimen/horizontal_app_margin"
+        android:layout_marginTop="@dimen/top_app_name_margin"
+        android:layout_marginBottom="@dimen/bottom_text_app_name_margin"
+        android:layout_marginRight="@dimen/horizontal_app_margin" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EMail"
+        android:textSize="@dimen/font_size_dig_cert"
+        android:layout_marginLeft="@dimen/horizontal_app_margin"
+        android:layout_marginBottom="@dimen/bottom_text_app_name_margin"
+        android:layout_marginRight="@dimen/horizontal_app_margin"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:layout_marginLeft="@dimen/horizontal_app_margin"
+        android:layout_marginRight="@dimen/horizontal_app_margin"
+        android:ems="10"
+        android:id="@+id/edtEmail" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Senha"
+        android:textSize="@dimen/font_size_dig_cert"
+        android:layout_marginTop="@dimen/top_button_margin"
+        android:layout_marginLeft="@dimen/horizontal_app_margin"
+        android:layout_marginBottom="@dimen/bottom_text_app_name_margin"
+        android:layout_marginRight="@dimen/horizontal_app_margin"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:layout_marginLeft="@dimen/horizontal_app_margin"
+        android:layout_marginRight="@dimen/horizontal_app_margin"
+        android:ems="10"
+        android:id="@+id/edtPassword" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="1">
+
+        <Button
+            android:id="@+id/btnDefUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="btnDefineUser"
+            android:text="@string/txt_create_user"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/top_button_margin"
+            android:layout_marginRight="@dimen/horizontal_app_margin" />
+
+    </GridLayout>
+
+</LinearLayout>

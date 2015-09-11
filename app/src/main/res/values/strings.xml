@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">CryptoContact</string>
-    <string name="app_name1">Crypto</string>
-    <string name="app_name2">Contact</string>
+    <string name="app_name">Pass Shelter</string>
+    <string name="app_name1">Pass</string>
+    <string name="app_name2">Shelter</string>
 
-    <string name="hello_world">Bem-vindo ao CryptoContact!</string>
+    <string name="hello_world">Bem-vindo ao Pass Shelter!</string>
     <string name="backup">Salvar chave</string>
     <string name="restore">Recuperar chave</string>
     <string name="digital_certificate">Certificado Digital</string>
@@ -20,4 +20,12 @@
     <string name="import_key">Importar chave</string>
     <string name="import_message">Confirma a importação da chave de acesso?</string>
     <string name="file_not_found">Arquivo de chave de acesso não encontrado</string>
+    <string name="text_dig_cert">Bem vindo ao software de compartilhamento de senhas Pass Shelter. Ele permitirá que você envie senhas aos seus amigos de forma segura.</string>
+    <string name="text_dig_cert_install">O certificado digital ainda não foi instalado. Pressione o botão \"Instalar\" para instalar o certificado e inicializar as informações de segurança.</string>
+    <string name="text_def_user">Informe aqui seu email e uma senha que serão usados para compartilhar senhas posteriormente.</string>
+    <string name="text_login">Informe aqui a senha para acessar o sistema.</string>
+    <string name="txt_create_user">Salvar</string>
+    <string name="txt_btn_login">Login</string>
+    <string name="action_settings">Settings</string>
+    <string name="txt_btn_cancel">Cancelar</string>
 </resources>

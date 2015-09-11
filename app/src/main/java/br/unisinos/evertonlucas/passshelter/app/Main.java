@@ -1,7 +1,9 @@
-package br.unisinos.evertonlucas.passshelter;
+package br.unisinos.evertonlucas.passshelter.app;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,13 +11,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
+import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateCertificateStatus;
 import br.unisinos.evertonlucas.passshelter.bizserv.KeyService;
 import br.unisinos.evertonlucas.passshelter.data.ExportSecretKeyData;
 import br.unisinos.evertonlucas.passshelter.util.ConfirmationDialog;
 
 
-public class Main extends ActionBarActivity implements UpdateCertificateStatus,
+public class Main extends AppCompatActivity implements UpdateCertificateStatus,
         ConfirmationDialog.ConfirmationDialogListener{
 
     private Button button;
@@ -26,7 +31,12 @@ public class Main extends ActionBarActivity implements UpdateCertificateStatus,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.service = new KeyService(this, this);
+        try {
+            this.service = new KeyService(this, this);
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao iniciar tela principal", Toast.LENGTH_LONG).show();
+            Log.e("Pass Shelter", "Exceção ao iniciar tela principal", e);
+        }
     }
 
     @Override

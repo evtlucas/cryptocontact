@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 
 /**
+ * Class used to read for and write to Shared Preferences
  * Created by everton on 02/08/15.
  */
 public class SharedPrefUtil {
@@ -12,6 +13,9 @@ public class SharedPrefUtil {
     public static final String KEYCHAIN_PREF = "keychain";
     public static final String KEYCHAIN_PREF_ALIAS = "alias";
     public static final String KEYCHAIN_PREF_KEY = "key";
+    public static final String KEYCHAIN_PREF_STATE = "state";
+    public static final String KEYCHAIN_PREF_USER = "user";
+    public static final String KEYCHAIN_PREF_PWD = "pwd";
 
     public static String readFrom(Context context, String name, String key) {
         SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
@@ -23,8 +27,7 @@ public class SharedPrefUtil {
         String value = pref.getString(key, "");
         if (value.trim().length() == 0)
             return new byte[0];
-        byte[] result = Base64.decode(value, Base64.DEFAULT);
-        return result;
+        return Base64.decode(value, Base64.DEFAULT);
     }
 
     public static void writeTo(Context context, String name, String key, String value) {
@@ -42,6 +45,17 @@ public class SharedPrefUtil {
         String stringValue = Base64.encodeToString(value, Base64.DEFAULT);
         SharedPreferences.Editor editor = getEditor(context, name);
         editor.putString(key, stringValue);
+        editor.commit();
+    }
+
+    public static int readIntFrom(Context context, String name, String key) {
+        SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        return pref.getInt(key, -1);
+    }
+
+    public static void writeIntTo(Context context, String name, String key, int value) {
+        SharedPreferences.Editor editor = getEditor(context, name);
+        editor.putInt(key, value);
         editor.commit();
     }
 }

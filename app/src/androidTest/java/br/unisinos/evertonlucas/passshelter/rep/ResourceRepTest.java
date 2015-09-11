@@ -24,8 +24,8 @@ import br.unisinos.evertonlucas.passshelter.util.KeyGenerationUtil;
 public class ResourceRepTest extends AndroidTestCase {
 
     private static final String TEST_PREFIX = "test_";
-    private ResourceRep resourceRep;
     private SymmetricEncryption encryption;
+    private ResourceRep resourceRep;
     private String resName = "Facebook";
     private String user = "User";
     private String password = "123456";

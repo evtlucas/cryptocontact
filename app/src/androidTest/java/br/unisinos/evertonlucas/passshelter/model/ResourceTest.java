@@ -1,7 +1,5 @@
 package br.unisinos.evertonlucas.passshelter.model;
 
-import android.util.Base64;
-
 import junit.framework.TestCase;
 
 import java.security.InvalidKeyException;

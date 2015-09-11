@@ -25,13 +25,6 @@ public class ImportSecretKeyData implements ConfirmationDialog.ConfirmationDialo
         this.activity = activity;
     }
 
-    public void importData() {
-        ConfirmationDialog dialog = ConfirmationDialog.newInstance(this);
-        dialog.setTitle(R.string.import_key)
-                .setMessage(R.string.import_message)
-                .show(this.activity.getFragmentManager(), "");
-    }
-
     @Override
     public void onConfirmationPositive() {
         File importFile = DataUtil.getFile();
@@ -42,8 +35,8 @@ public class ImportSecretKeyData implements ConfirmationDialog.ConfirmationDialo
         try {
             FileInputStream fis = new FileInputStream(importFile);
             byte[] data = new byte[(int)importFile.length()];
-            fis.read(data);
-            updateSecretKey.update(data);
+            if(fis.read(data) > 0)
+                updateSecretKey.update(data);
         } catch (Exception e) {
             throwException(e, activity);
         }
@@ -52,8 +45,6 @@ public class ImportSecretKeyData implements ConfirmationDialog.ConfirmationDialo
     public static void throwException(Exception e, Activity activity) {
         makeText(activity, activity.getResources().getString(R.string.import_key_exception) + e.getMessage(),
                 LENGTH_LONG).show();
-        Log.e(activity.getResources().getString(R.string.app_name),
-                activity.getResources().getString(R.string.import_key_exception) +
-                        e.getMessage() + "\n\r" + e.getStackTrace().toString());
+        Log.e(activity.getResources().getString(R.string.app_name), activity.getResources().getString(R.string.import_key_exception), e);
     }
 }

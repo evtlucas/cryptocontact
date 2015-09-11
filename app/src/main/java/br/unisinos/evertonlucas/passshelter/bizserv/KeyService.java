@@ -24,7 +24,9 @@ import br.unisinos.evertonlucas.passshelter.data.PersistSecretData;
 import br.unisinos.evertonlucas.passshelter.data.UpdateSecretKey;
 import br.unisinos.evertonlucas.passshelter.encryption.Algorithms;
 import br.unisinos.evertonlucas.passshelter.encryption.AssymetricEncryption;
+import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
+import br.unisinos.evertonlucas.passshelter.util.ConfirmationDialog;
 import br.unisinos.evertonlucas.passshelter.util.KeyStoreUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
 
@@ -34,7 +36,7 @@ import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
  */
 public class KeyService implements UpdateCertificate, KeyChainAliasCallback, UpdateSecretKey {
 
-    private final UpdateCertificateStatus certStatus;
+    private UpdateCertificateStatus certStatus;
     private Activity activity;
     private boolean generatePrivateKey = false;
     private final KeyStoreUtil util;
@@ -45,8 +47,23 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
     public KeyService(UpdateCertificateStatus certStatus, Activity activity) {
         this.certStatus = certStatus;
         this.activity = activity;
-        util = new KeyStoreUtil(activity);
+        this.util = new KeyStoreUtil(activity);
         this.persist = new PersistSecretData();
+    }
+
+    public void setUpdateCertificateStatus(UpdateCertificateStatus certStatus) {
+        this.certStatus = certStatus;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    public SymmetricEncryption getSymmetricEncryption() {
+        readSavedPrivateKey();
+        if (this.key == null)
+            return null;
+        return new SymmetricEncryption(key);
     }
 
     public boolean isCertificateAvailable() {
@@ -102,9 +119,7 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
             generatePrivateKey = true;
         } catch (Exception e) {
             cert = new CertificateBag(null, null);
-            Log.e(this.activity.getResources().getString(R.string.app_name),
-                    "Error during KeyService definition: " +
-                    e.getMessage() + "\n\r" + e.getStackTrace().toString());
+            Log.e(this.activity.getResources().getString(R.string.app_name), "Error during KeyService definition", e);
         }
     }
 
@@ -113,9 +128,7 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
             readCertificate(getAlias());
         } catch (Exception e) {
             cert = new CertificateBag(null, null);
-            Log.e(this.activity.getResources().getString(R.string.app_name),
-                    "Error during KeyService new read: " +
-                    e.getMessage() + "\n\r" + e.getStackTrace().toString());
+            Log.e(this.activity.getResources().getString(R.string.app_name), "Error during KeyService new read", e);
         }
     }
 
@@ -128,17 +141,28 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
 
     public void importCryptographicKey() {
         ImportSecretKeyData data = new ImportSecretKeyData(this, this.activity);
-        data.importData();
+        ConfirmationDialog dialog = ConfirmationDialog.newInstance(data);
+        dialog.setTitle(R.string.import_key)
+                .setMessage(R.string.import_message)
+                .show(this.activity.getFragmentManager(), "");
     }
 
     @Override
     public void update(byte[] key) {
         try {
             byte[] decoded = new AssymetricEncryption(this.cert).decrypt(key);
-            SecretKey skey = new SecretKeySpec(decoded, Algorithms.SYMMETRIC);
-            this.key = skey;
+            this.key = new SecretKeySpec(decoded, Algorithms.SYMMETRIC);
         } catch (Exception e) {
             ImportSecretKeyData.throwException(e, this.activity);
         }
+    }
+
+    public void loadCertificate() throws ExecutionException, InterruptedException {
+        readCertificate(getAlias());
+        //certStatus.update(isCertificateAvailable());
+    }
+
+    public CertificateBag getCertificateBag() {
+        return this.cert;
     }
 }

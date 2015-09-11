@@ -33,9 +33,7 @@ public class PersistSecretData {
             }
         } catch (Exception e) {
             makeText(context, "Erro ao ler dados criptográficos", LENGTH_LONG).show();
-            Log.e(context.getResources().getString(R.string.app_name),
-                    "Error during private key reading: " +
-                            e.getMessage() + "\n\r" + e.getStackTrace().toString());
+            Log.e(context.getResources().getString(R.string.app_name), "Error during private key reading: ", e);
         }
         return pKey;
     }
@@ -51,9 +49,7 @@ public class PersistSecretData {
                     SharedPrefUtil.KEYCHAIN_PREF_KEY, encodedKey);
         } catch (Exception e) {
             makeText(context, "Erro ao atualizar certificado", LENGTH_LONG).show();
-            Log.e(context.getResources().getString(R.string.app_name),
-                    "Error during KeyService definition: " +
-                            e.getMessage() + "\n\r" + e.getStackTrace().toString());
+            Log.e(context.getResources().getString(R.string.app_name), "Error during KeyService definition: ", e);
         }
         return key;
     }
