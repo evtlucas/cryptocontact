@@ -4,4 +4,5 @@
     <color name="item_color">#807863</color>
     <color name="text_color">#000000</color>
     <color name="text_color_dig_cert">#FFFFFF</color>
+    <color name="selected_item_color">#D8D6CE</color>
 </resources>

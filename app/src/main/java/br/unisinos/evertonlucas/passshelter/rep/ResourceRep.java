@@ -97,6 +97,13 @@ public class ResourceRep {
             throw new RuntimeException("Db Update Error");
     }
 
+    public void saveResource(Resource resource) throws Exception {
+        if (resource.getId() != null)
+            updateResource(resource);
+        else
+            insertResource(resource);
+    }
+
     public List<Resource> getAllResources() throws InvalidKeyException, BadPaddingException,
             NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
         List<Resource> resources = new ArrayList<>();
@@ -110,5 +117,10 @@ public class ResourceRep {
         }
         cursor.close();
         return resources;
+    }
+
+    public void delete(Resource resource) {
+        db = dbHelper.getWritableDatabase();
+        db.delete(DbHelper.RESOURCE, "_id=?", new String[] {resource.getId().toString()});
     }
 }

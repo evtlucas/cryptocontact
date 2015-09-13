@@ -11,5 +11,11 @@
     <dimen name="top_button_margin">10dp</dimen>
     <dimen name="bottom_dig_cert_margin">10dp</dimen>
     <dimen name="font_size_logo">40sp</dimen>
+
+    <dimen name="space_between_resource_name">15dp</dimen>
+    <dimen name="font_size_resource">20sp</dimen>
+    <dimen name="font_title_resource">23sp</dimen>
     <dimen name="font_size_dig_cert">20sp</dimen>
+    <dimen name="bottom_margin_item">20dp</dimen>
+    <dimen name="top_margin_item">20dp</dimen>
 </resources>

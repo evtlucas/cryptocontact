@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/bottom_margin_item"
+    android:paddingTop="@dimen/top_margin_item"
+    android:background="@drawable/background_list_resouces">
+
+    <TextView
+        android:id="@+id/txtResource"
+        android:textSize="@dimen/font_size_resource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/space_between_resource_name"
+        android:text="@string/lblResource" />
+    <TextView
+        android:id="@+id/txtResLabel"
+        android:textSize="@dimen/font_size_resource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/txtResource"
+        android:text="" />
+
+</RelativeLayout>

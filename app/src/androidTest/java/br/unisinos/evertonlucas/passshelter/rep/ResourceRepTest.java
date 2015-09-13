@@ -38,7 +38,7 @@ public class ResourceRepTest extends AndroidTestCase {
 
         RenamingDelegatingContext context = new RenamingDelegatingContext(getContext(), TEST_PREFIX);
         resourceRep = new ResourceRep(context, encryption);
-        insertResource(resName, this.user, password);
+        insertResource(this.resName, this.user, this.password);
     }
 
     public void tearDown() throws Exception {
@@ -62,7 +62,7 @@ public class ResourceRepTest extends AndroidTestCase {
 
     private void insertResource(String resName, String user, String password) throws Exception {
         Resource resource = getResource(resName, user, password);
-        resourceRep.insertResource(resource);
+        resourceRep.saveResource(resource);
     }
 
     public void testAvoidDuplicateInsertion() throws Exception {
@@ -82,7 +82,7 @@ public class ResourceRepTest extends AndroidTestCase {
         resQuery.setName(name);
         resQuery.setUser(user2);
         resQuery.setPassword(password);
-        resourceRep.updateResource(resQuery);
+        resourceRep.saveResource(resQuery);
         Resource resQuery2 = resourceRep.getResourceByName(name);
         assertNotNull(resQuery2);
         assertTrue(resQuery2.getName().equals(name));
@@ -104,9 +104,9 @@ public class ResourceRepTest extends AndroidTestCase {
         }
     }
 
-    private Resource getResource(String facebook, String user, String password) {
+    private Resource getResource(String name, String user, String password) {
         Resource resource = new Resource(encryption);
-        resource.setName(facebook);
+        resource.setName(name);
         resource.setUser(user);
         resource.setPassword(password);
         return resource;
@@ -116,5 +116,13 @@ public class ResourceRepTest extends AndroidTestCase {
             BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         List<Resource> list = resourceRep.getAllResources();
         assertTrue(list.size() > 0);
+    }
+
+    public void testDeleteResource() throws IllegalBlockSizeException, NoSuchPaddingException,
+            BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        Resource resource = resourceRep.getResourceByName(this.resName);
+        this.resourceRep.delete(resource);
+        Resource resQuery = resourceRep.getResourceByName(this.resName);
+        assertNull(resQuery);
     }
 }
