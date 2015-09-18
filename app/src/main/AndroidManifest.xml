@@ -51,6 +51,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.unisinos.evertonlucas.passshelter.app.Main" />
         </activity>
+        <activity
+            android:name=".app.SendResourceActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".app.ResourceActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.unisinos.evertonlucas.passshelter.app.ResourceActivity" />
+        </activity>
     </application>
 
 </manifest>

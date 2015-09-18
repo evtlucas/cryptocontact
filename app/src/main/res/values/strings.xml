@@ -37,4 +37,12 @@
     <string name="delete_confirmation">Confirma a exclusão do Recurso?</string>
     <string name="button_yes">Sim</string>
     <string name="button_no">Não</string>
+    <string name="title_activity_send_resource">SendResourceActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="lblSendResourceTitle">Envio de recursos</string>
+    <string name="lblDestinationEmail">Email do Destinatário</string>
+    <string name="txt_search_email">Buscar</string>
+    <string name="send_resource">Enviar recurso</string>
+    <string name="wait_emails">Pesquisando emails informados</string>
 </resources>

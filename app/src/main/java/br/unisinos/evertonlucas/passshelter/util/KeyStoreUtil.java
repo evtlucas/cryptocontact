@@ -24,15 +24,6 @@ public class KeyStoreUtil {
         this.activity = activity;
     }
 
-    private byte[] readFile(String filename) throws Exception {
-        File f = new File(Environment.getExternalStorageDirectory(), filename);
-        byte[] result = new byte[(int) f.length()];
-        FileInputStream in = new FileInputStream(f);
-        in.read(result);
-        in.close();
-        return result;
-    }
-
     public void readCertificate(UpdateCertificate update, String alias)
             throws ExecutionException, InterruptedException {
         CertificateReadAsyncTask asyncTask = new CertificateReadAsyncTask(activity, update, alias);

@@ -16,6 +16,8 @@ public class SharedPrefUtil {
     public static final String KEYCHAIN_PREF_STATE = "state";
     public static final String KEYCHAIN_PREF_USER = "user";
     public static final String KEYCHAIN_PREF_PWD = "pwd";
+    public static final String RESOURCE = "resource";
+    public static final String RESOURCE_NAME = "name";
 
     public static String readFrom(Context context, String name, String key) {
         SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);
@@ -33,6 +35,12 @@ public class SharedPrefUtil {
     public static void writeTo(Context context, String name, String key, String value) {
         SharedPreferences.Editor editor = getEditor(context, name);
         editor.putString(key, value);
+        editor.commit();
+    }
+
+    public static void delete(Context context, String name, String key) {
+        SharedPreferences.Editor editor = getEditor(context, name);
+        editor.remove(key);
         editor.commit();
     }
 
