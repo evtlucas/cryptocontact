@@ -14,13 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package br.unisinos.evertonlucas.passshelter.app;
+package br.unisinos.evertonlucas.passshelter.async;
 
 /**
- * Interface created for notificate finished installation step
- * Created by everton on 06/09/15.
+ * Interface created for notification
+ * Created by everton on 28/07/15.
  */
-public interface InstallStepFinished {
-    void finished(InstallState state);
-    void persistState(InstallState state);
+public interface UpdateStatus {
+    void update(boolean status);
 }

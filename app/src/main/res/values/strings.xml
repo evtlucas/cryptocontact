@@ -1,3 +1,18 @@
+<!--
+Copyright 2015 Everton Luiz de Resende Lucas
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 <resources>
     <string name="app_name">Pass Shelter</string>
     <string name="app_name1">Pass</string>
@@ -19,30 +34,35 @@
     <string name="import_key">Importar chave</string>
     <string name="import_message">Confirma a importação da chave de acesso?</string>
     <string name="file_not_found">Arquivo de chave de acesso não encontrado</string>
+
     <string name="text_dig_cert">Bem vindo ao software de compartilhamento de senhas Pass Shelter. Ele permitirá que você envie senhas aos seus amigos de forma segura.</string>
     <string name="text_dig_cert_install">O certificado digital ainda não foi instalado. Pressione o botão \"Instalar\" para instalar o certificado e inicializar as informações de segurança.</string>
+
     <string name="text_def_user">Informe aqui seu email e uma senha que serão usados para compartilhar senhas posteriormente.</string>
     <string name="text_login">Informe aqui a senha para acessar o sistema.</string>
     <string name="txt_create_user">Salvar</string>
-    <string name="txt_btn_login">Login</string>
-    <string name="action_settings">Settings</string>
-    <string name="txt_btn_cancel">Cancelar</string>
-    <string name="lblResource">Recurso:</string>
-    <string name="refresh">Verificar recursos</string>
-    <string name="title_activity_resource">ResourceActivity</string>
-    <string name="lblUser">Usuário</string>
-    <string name="lblPassword">Senha</string>
-    <string name="lblTitleResource">Cadastro de Recursos</string>
-    <string name="delete_resource">Excluir recurso</string>
-    <string name="delete_confirmation">Confirma a exclusão do Recurso?</string>
+
     <string name="button_yes">Sim</string>
     <string name="button_no">Não</string>
-    <string name="title_activity_send_resource">SendResourceActivity</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="lblSendResourceTitle">Envio de recursos</string>
-    <string name="lblDestinationEmail">Email do Destinatário</string>
+    <string name="txt_btn_login">Login</string>
+    <string name="txt_btn_cancel">Cancelar</string>
+    <string name="lbl_resource">Recurso:</string>
+    <string name="refresh">Verificar recursos</string>
+    <string name="lbl_user">Usuário</string>
+    <string name="lbl_password">Senha</string>
+    <string name="delete_resource">Excluir recurso</string>
+    <string name="delete_confirmation">Confirma a exclusão do Recurso?</string>
+
+    <string name="lbl_send_resource_title">Envio de recursos</string>
+    <string name="lbl_destination_email">Email do Destinatário</string>
     <string name="txt_search_email">Buscar</string>
     <string name="send_resource">Enviar recurso</string>
     <string name="wait_emails">Pesquisando emails informados</string>
+
+    <string name="title_activity_resource">Cadastro de Recurso</string>
+    <string name="title_activity_send_resource">Enviar recurso</string>
+    <string name="txt_send_resource">Enviar recurso</string>
+    <string name="process_send_resource">Enviando recurso</string>
+    <string name="process_verify_resources">Verificando novos recursos</string>
 </resources>

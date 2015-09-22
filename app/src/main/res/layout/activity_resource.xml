@@ -1,3 +1,18 @@
+<!--
+Copyright 2015 Everton Luiz de Resende Lucas
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -8,19 +23,12 @@
     tools:context="br.unisinos.evertonlucas.passshelter.app.ResourceActivity">
 
     <TextView
-        android:textSize="@dimen/font_title_resource"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/horizontal_app_margin"
-        android:text="@string/lblTitleResource" />
-
-    <TextView
         android:textSize="@dimen/font_size_resource"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/top_button_margin"
         android:layout_marginRight="@dimen/horizontal_app_margin"
-        android:text="@string/lblResource" />
+        android:text="@string/lbl_resource" />
 
     <EditText
         android:id="@+id/txtActivityResource"
@@ -37,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/top_button_margin"
         android:layout_marginRight="@dimen/horizontal_app_margin"
-        android:text="@string/lblUser" />
+        android:text="@string/lbl_user" />
 
     <EditText
         android:id="@+id/txtActivityUser"
@@ -54,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/top_button_margin"
         android:layout_marginRight="@dimen/horizontal_app_margin"
-        android:text="@string/lblPassword" />
+        android:text="@string/lbl_password" />
 
     <EditText
         android:id="@+id/txtActivityPassword"

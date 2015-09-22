@@ -14,13 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package br.unisinos.evertonlucas.passshelter.app;
+package br.unisinos.evertonlucas.passshelter.encryption;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 
 /**
- * Interface created for notificate finished installation step
- * Created by everton on 06/09/15.
+ * Class designed for assymetric decryption
+ * Created by everton on 20/09/15.
  */
-public interface InstallStepFinished {
-    void finished(InstallState state);
-    void persistState(InstallState state);
+public class AssymetricDecryption {
+    private final Cipher decCipher;
+
+    public AssymetricDecryption(Cipher encCipher) {
+        this.decCipher = encCipher;
+    }
+
+    public byte[] decrypt(byte[] bytes) throws BadPaddingException, IllegalBlockSizeException {
+        return this.decCipher.doFinal(bytes);
+    }
 }

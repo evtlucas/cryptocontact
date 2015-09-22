@@ -1,35 +1,43 @@
+/*
+Copyright 2015 Everton Luiz de Resende Lucas
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package br.unisinos.evertonlucas.passshelter.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteConstraintException;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import br.unisinos.evertonlucas.passshelter.R;
-import br.unisinos.evertonlucas.passshelter.async.UpdateCertificateStatus;
-import br.unisinos.evertonlucas.passshelter.bizserv.KeyService;
+import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
+import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
 
-public class ResourceActivity extends AppCompatActivity implements UpdateCertificateStatus,
+public class ResourceActivity extends AppCompatActivity implements UpdateStatus,
         DialogInterface.OnClickListener{
 
     private KeyService keyService;
@@ -57,14 +65,16 @@ public class ResourceActivity extends AppCompatActivity implements UpdateCertifi
         try {
             Bundle extras = getIntent().getExtras();
             String name = SharedPrefUtil.readFrom(this, SharedPrefUtil.RESOURCE, SharedPrefUtil.RESOURCE_NAME);
-            if (name.trim().isEmpty() && (extras != null))
-                name = extras.getString("name") != null ? extras.getString("name") : "";
-            if (!name.trim().isEmpty()) {
-                this.resource = this.resourceRep.getResourceByName(name);
-                fillFieldsFromResource(this.resource);
-            } else
-                insercao = true;
-            SharedPrefUtil.delete(this, SharedPrefUtil.RESOURCE, SharedPrefUtil.RESOURCE_NAME);
+            if (name != null) {
+                if (name.trim().isEmpty() && (extras != null))
+                    name = extras.getString("name") != null ? extras.getString("name") : "";
+                if (!name.isEmpty()) {
+                    this.resource = this.resourceRep.getResourceByName(name);
+                    fillFieldsFromResource(this.resource);
+                } else
+                    insercao = true;
+                SharedPrefUtil.delete(this, SharedPrefUtil.RESOURCE, SharedPrefUtil.RESOURCE_NAME);
+            }
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao iniciar tela de recursos", Toast.LENGTH_LONG).show();
             Log.e("Pass Shelter", "Exceção ao iniciar tela de recursos", e);
@@ -114,11 +124,17 @@ public class ResourceActivity extends AppCompatActivity implements UpdateCertifi
                 return true;
             case R.id.action_send:
                 SharedPrefUtil.writeTo(this, SharedPrefUtil.RESOURCE, SharedPrefUtil.RESOURCE_NAME, this.resource.getName());
-                startActivity(new Intent(this, SendResourceActivity.class));
+                startSendResourceActivity();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startSendResourceActivity() {
+        Intent intent = new Intent(this, SendResourceActivity.class);
+        intent.putExtra("resourceName", resource.getName());
+        startActivity(intent);
     }
 
     private void deleteResource() {

@@ -1,4 +1,20 @@
-package br.unisinos.evertonlucas.passshelter.bizserv;
+/*
+Copyright 2015 Everton Luiz de Resende Lucas
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package br.unisinos.evertonlucas.passshelter.service;
 
 import android.app.Activity;
 import android.security.KeyChainAliasCallback;
@@ -17,13 +33,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateCertificate;
-import br.unisinos.evertonlucas.passshelter.async.UpdateCertificateStatus;
+import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.data.ExportSecretKeyData;
 import br.unisinos.evertonlucas.passshelter.data.ImportSecretKeyData;
 import br.unisinos.evertonlucas.passshelter.data.PersistSecretData;
 import br.unisinos.evertonlucas.passshelter.data.UpdateSecretKey;
 import br.unisinos.evertonlucas.passshelter.encryption.Algorithms;
-import br.unisinos.evertonlucas.passshelter.encryption.AssymetricEncryption;
+import br.unisinos.evertonlucas.passshelter.encryption.AssymetricCryptography;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.util.ConfirmationDialog;
@@ -36,7 +52,7 @@ import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
  */
 public class KeyService implements UpdateCertificate, KeyChainAliasCallback, UpdateSecretKey {
 
-    private UpdateCertificateStatus certStatus;
+    private UpdateStatus certStatus;
     private Activity activity;
     private boolean generatePrivateKey = false;
     private final KeyStoreUtil util;
@@ -44,14 +60,14 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
     private SecretKey key = null;
     private PersistSecretData persist;
 
-    public KeyService(UpdateCertificateStatus certStatus, Activity activity) {
+    public KeyService(UpdateStatus certStatus, Activity activity) {
         this.certStatus = certStatus;
         this.activity = activity;
         this.util = new KeyStoreUtil(activity);
         this.persist = new PersistSecretData();
     }
 
-    public void setUpdateCertificateStatus(UpdateCertificateStatus certStatus) {
+    public void setUpdateCertificateStatus(UpdateStatus certStatus) {
         this.certStatus = certStatus;
     }
 
@@ -135,7 +151,7 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
     public void exportCryptographicKey() throws NoSuchProviderException, InvalidKeyException,
             NoSuchAlgorithmException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException {
         ExportSecretKeyData data = new ExportSecretKeyData(this.activity);
-        byte[] encoded = new AssymetricEncryption(this.cert).encrypt(this.key.getEncoded());
+        byte[] encoded = new AssymetricCryptography(this.cert).encrypt(this.key.getEncoded());
         data.export(encoded);
     }
 
@@ -150,7 +166,7 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
     @Override
     public void update(byte[] key) {
         try {
-            byte[] decoded = new AssymetricEncryption(this.cert).decrypt(key);
+            byte[] decoded = new AssymetricCryptography(this.cert).decrypt(key);
             this.key = new SecretKeySpec(decoded, Algorithms.SYMMETRIC);
         } catch (Exception e) {
             ImportSecretKeyData.throwException(e, this.activity);

@@ -1,9 +1,25 @@
+/*
+Copyright 2015 Everton Luiz de Resende Lucas
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package br.unisinos.evertonlucas.passshelter.app;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -12,7 +28,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -23,30 +38,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import br.unisinos.evertonlucas.passshelter.R;
-import br.unisinos.evertonlucas.passshelter.async.UpdateCertificateStatus;
-import br.unisinos.evertonlucas.passshelter.bizserv.KeyService;
+import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
+import br.unisinos.evertonlucas.passshelter.async.VerifyProcessAsyncTask;
 import br.unisinos.evertonlucas.passshelter.data.ExportSecretKeyData;
-import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
+import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
-import br.unisinos.evertonlucas.passshelter.util.ConfirmationDialog;
+import br.unisinos.evertonlucas.passshelter.rep.UserRep;
+import br.unisinos.evertonlucas.passshelter.service.KeyService;
+import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 
 
-public class Main extends AppCompatActivity implements UpdateCertificateStatus,
-        ConfirmationDialog.ConfirmationDialogListener{
+public class Main extends AppCompatActivity implements UpdateStatus{
 
     private Context myContext;
     private Button button;
     private KeyService service;
     private ResourceRep resourceRep;
     private ListView listView;
+    private ProgressDialog progressDialog;
+    private UserRep userRep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +71,34 @@ public class Main extends AppCompatActivity implements UpdateCertificateStatus,
         setContentView(R.layout.activity_main);
         myContext = this;
 
+        createListView();
+
+        try {
+            this.service = PassShelterApp.createKeyService(this, this);
+            this.resourceRep = new ResourceRep(this, this.service.getSymmetricEncryption());
+            this.userRep = PassShelterApp.createUserRep(this, this.service.getSymmetricEncryption());
+
+            loadListView();
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao iniciar tela principal", Toast.LENGTH_LONG).show();
+            Log.e("Pass Shelter", "Exceção ao iniciar tela principal", e);
+        }
+    }
+
+    private void loadListView() throws InvalidKeyException, BadPaddingException,
+            NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
+        loadListAdapter(listView, this.resourceRep.getAllResources(), R.layout.list_resources);
+    }
+
+    private void createListView() {
         this.listView = (ListView) findViewById(R.id.list_view_main);
         this.listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         this.listView.setLongClickable(true);
         this.listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Map<String, String> resMap = (Map<String, String>) parent.getItemAtPosition(position);
                 try {
+                    Map<String, String> resMap = (Map<String, String>) parent.getItemAtPosition(position);
                     Resource res = resourceRep.getResourceByName(resMap.get("name"));
                     Intent intent = new Intent(myContext, ResourceActivity.class);
                     intent.putExtra("name", res.getName());
@@ -73,19 +110,6 @@ public class Main extends AppCompatActivity implements UpdateCertificateStatus,
                 return false;
             }
         });
-
-        try {
-            this.service = PassShelterApp.createKeyService(this, this);
-            this.resourceRep = new ResourceRep(this, this.service.getSymmetricEncryption());
-
-            /*for (int i = 0; i < 5; i++)
-                insertTestResource(this.service.getSymmetricEncryption(), i);*/
-
-            loadListAdapter(listView, this.resourceRep.getAllResources(), R.layout.list_resources);
-        } catch (Exception e) {
-            Toast.makeText(this, "Erro ao iniciar tela principal", Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao iniciar tela principal", e);
-        }
     }
 
     public void loadListAdapter(ListView listView, List<Resource> resources, int resource) {
@@ -96,28 +120,13 @@ public class Main extends AppCompatActivity implements UpdateCertificateStatus,
     }
 
     private List<? extends Map<String, String>> listResources(List<Resource> resources) {
-        List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> mapList = new ArrayList<>();
         for (Resource resource : resources) {
             Map<String, String> map = new HashMap<>();
             map.put("name", resource.getName());
             mapList.add(map);
         }
         return mapList;
-    }
-
-    public void insertTestResource(SymmetricEncryption encryption, int i) throws Exception {
-        String resource = "resource " + Integer.toString(i);
-        String usr = "usr";
-        String pwd = "pwd";
-        insertResource(encryption, resource, usr, pwd);
-    }
-
-    private void insertResource(SymmetricEncryption encryption, String resName, String user, String password) throws Exception {
-        Resource resource = new Resource(encryption);
-        resource.setName(resName);
-        resource.setUser(user);
-        resource.setPassword(password);
-        resourceRep.insertResource(resource);
     }
 
     @Override
@@ -142,6 +151,9 @@ public class Main extends AppCompatActivity implements UpdateCertificateStatus,
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.action_refresh:
+                verifyResources();
+                return true;
             case R.id.action_backup:
                 try {
                     service.exportCryptographicKey();
@@ -160,22 +172,29 @@ public class Main extends AppCompatActivity implements UpdateCertificateStatus,
         return super.onOptionsItemSelected(item);
     }
 
-    public void btnInstallCertificate(View v) {
-        service.installCertificate();
+    private void verifyResources() {
+        this.progressDialog = ProgressDialogUtil.createProgressDialog(this, getString(R.string.process_verify_resources));
+        try {
+            new VerifyProcessAsyncTask(this, service, resourceRep, this, new ParseData(), userRep)
+                    .execute();
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao verificar recursos", Toast.LENGTH_LONG).show();
+            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao verificar recursos", e);
+            this.progressDialog.dismiss();
+        }
     }
 
     @Override
     public void update(boolean status) {
-        /*ImageView imgView = (ImageView) findViewById(R.id.imgStatusDigCert);
         if (status) {
-            imgView.setImageResource(R.drawable.ic_thumb_up);
-        } else {
-            imgView.setImageResource(R.drawable.ic_thumb_down);
-        }*/
-    }
-
-    @Override
-    public void onConfirmationPositive() {
-        Toast.makeText(this, "Clicado", Toast.LENGTH_LONG).show();
+            try {
+                loadListView();
+                if (this.progressDialog != null)
+                    this.progressDialog.dismiss();
+            } catch (Exception e) {
+                Toast.makeText(this, "Erro ao recarregar recursos", Toast.LENGTH_LONG).show();
+                Log.e(this.getResources().getString(R.string.app_name), "Exceção ao recarregar recursos", e);
+            }
+        }
     }
 }

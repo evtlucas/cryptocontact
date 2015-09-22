@@ -16,23 +16,31 @@ limitations under the License.
 
 package br.unisinos.evertonlucas.passshelter.encryption;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
- * Class designed for assymetric encription
+ * Class responsible for cryptograph some content using Public Key
  * Created by everton on 20/09/15.
  */
-public class AssymetricEncryption {
+public class PublicAssymetricCryptography {
 
-    private final Cipher encCipher;
+    private Cipher encCipher;
 
-    public AssymetricEncryption(Cipher encCipher) {
-        this.encCipher = encCipher;
+    public PublicAssymetricCryptography(PublicKey key) throws NoSuchPaddingException,
+            NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+        this.encCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, "AndroidOpenSSL");
+        this.encCipher.init(Cipher.ENCRYPT_MODE, key);
     }
 
     public byte[] encrypt(byte[] bytes) throws BadPaddingException, IllegalBlockSizeException {
-        return this.encCipher.doFinal(bytes);
+        return new AssymetricEncryption(this.encCipher).encrypt(bytes);
     }
 }

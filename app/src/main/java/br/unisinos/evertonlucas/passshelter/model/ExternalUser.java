@@ -16,32 +16,30 @@ limitations under the License.
 
 package br.unisinos.evertonlucas.passshelter.model;
 
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
+import java.security.PublicKey;
 
 /**
- * Class designed for join X509 and Private Key
- * Created by everton on 02/08/15.
+ * Class responsible for represent a resource which comes from Parse.com
+ * Created by everton on 20/09/15.
  */
-public class CertificateBag {
+public class ExternalUser {
+    private final String email;
+    private final PublicKey publicKey;
 
-    private X509Certificate cert;
-    private PrivateKey privateKey;
-
-    public CertificateBag(X509Certificate cert, PrivateKey privateKey) {
-        this.cert = cert;
-        this.privateKey = privateKey;
+    public ExternalUser(String email, PublicKey publicKey) {
+        this.email = email;
+        this.publicKey = publicKey;
     }
 
-    public PrivateKey getPrivateKey() {
-        return privateKey;
+    public String getEmail() {
+        return email;
     }
 
-    public X509Certificate getCert() {
-        return cert;
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 
     public boolean isValid() {
-        return cert != null && privateKey != null;
+        return (this.email != null) || (this.publicKey != null);
     }
 }
