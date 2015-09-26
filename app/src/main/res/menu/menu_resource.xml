@@ -26,9 +26,16 @@ limitations under the License.
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_gen_key"
+        android:icon="@drawable/ic_action_key"
+        android:orderInCategory="200"
+        android:title="@string/generate_key"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_action_delete"
-        android:orderInCategory="100"
+        android:orderInCategory="300"
         android:title="@string/delete_resource"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 </menu>

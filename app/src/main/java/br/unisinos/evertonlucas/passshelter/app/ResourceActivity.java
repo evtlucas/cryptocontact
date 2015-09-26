@@ -35,6 +35,7 @@ import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
+import br.unisinos.evertonlucas.passshelter.util.PasswordGenerationUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
 
 public class ResourceActivity extends AppCompatActivity implements UpdateStatus,
@@ -126,9 +127,16 @@ public class ResourceActivity extends AppCompatActivity implements UpdateStatus,
                 SharedPrefUtil.writeTo(this, SharedPrefUtil.RESOURCE, SharedPrefUtil.RESOURCE_NAME, this.resource.getName());
                 startSendResourceActivity();
                 return true;
+            case R.id.action_gen_key:
+                generateNewPassword();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void generateNewPassword() {
+        txtPassword.setText(PasswordGenerationUtil.generatePassword());
     }
 
     private void startSendResourceActivity() {

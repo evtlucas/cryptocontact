@@ -65,4 +65,5 @@ limitations under the License.
     <string name="txt_send_resource">Enviar recurso</string>
     <string name="process_send_resource">Enviando recurso</string>
     <string name="process_verify_resources">Verificando novos recursos</string>
+    <string name="generate_key">Gerar nova chave</string>
 </resources>
