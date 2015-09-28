@@ -37,7 +37,6 @@ import br.unisinos.evertonlucas.passshelter.rep.GroupsRep;
 
 public class GroupsActivity extends AppCompatActivity {
 
-    private String localUser;
     private GroupsRep groupsRep;
     private ListView lstGroups;
 
@@ -46,9 +45,6 @@ public class GroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
         lstGroups = (ListView) findViewById(R.id.list_view_groups);
-
-        Bundle extras = getIntent().getExtras();
-        localUser = extras.getString("local_user");
 
         groupsRep = new GroupsRep(this);
         loadListAdapter(lstGroups, groupsRep.getGroupsName(), R.layout.list_groups);
@@ -96,7 +92,6 @@ public class GroupsActivity extends AppCompatActivity {
 
     private void startNewGroupActivity() {
         Intent intent = new Intent(this, NewGroupActivity.class);
-        intent.putExtra("local_user", localUser);
         startActivity(intent);
     }
 
@@ -104,7 +99,6 @@ public class GroupsActivity extends AppCompatActivity {
         RelativeLayout layout = (RelativeLayout) view.getParent();
         TextView txtGroup = (TextView) layout.getChildAt(0);
         Intent intent = new Intent(this, GroupActivity.class);
-        intent.putExtra("local_user", localUser);
         intent.putExtra("group_name", txtGroup.getText().toString());
         startActivity(intent);
     }

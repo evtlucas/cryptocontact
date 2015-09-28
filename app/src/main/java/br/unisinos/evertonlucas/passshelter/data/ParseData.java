@@ -38,6 +38,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import br.unisinos.evertonlucas.passshelter.app.FinishedFind;
+import br.unisinos.evertonlucas.passshelter.app.PassShelterApp;
 import br.unisinos.evertonlucas.passshelter.encryption.PrivateAssymetricCryptography;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
@@ -63,6 +64,7 @@ public class ParseData {
     public void getExternalUsers(final String email, final FinishedFind find) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereStartsWith("email", email);
+        query.whereNotEqualTo("email", PassShelterApp.getLocalUser());
         query.setLimit(10);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -86,6 +88,7 @@ public class ParseData {
         List<ParseUser> listEmail = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereStartsWith("email", email);
+        query.whereNotEqualTo("email", PassShelterApp.getLocalUser());
         query.setLimit(7);
         List<ParseObject> list = query.find();
         for(ParseObject user : list) {
@@ -99,6 +102,7 @@ public class ParseData {
             InvalidKeySpecException {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereEqualTo("email", email);
+        query.whereNotEqualTo("email", PassShelterApp.getLocalUser());
         List<ParseObject> objects = query.find();
         if (objects.size() == 0)
             return new ParseUser(null, null);

@@ -43,7 +43,7 @@ public class GroupActivity extends AppCompatActivity implements DialogInterface.
         groupsRep = new GroupsRep(this);
 
         Bundle extras = getIntent().getExtras();
-        localUser = extras.getString("local_user");
+        localUser = PassShelterApp.getLocalUser();
         String groupName = extras.getString("group_name");
         setTitle(groupName);
         try {

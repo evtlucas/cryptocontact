@@ -43,8 +43,7 @@ public class NewGroupActivity extends AppCompatActivity {
         txtNameNewGroup = (EditText) findViewById(R.id.txtNameNewGroup);
         groupsRep = new GroupsRep(this);
 
-        Bundle extras = getIntent().getExtras();
-        localUser = extras.getString("local_user");
+        localUser = PassShelterApp.getLocalUser();
     }
 
     @Override
@@ -76,7 +75,6 @@ public class NewGroupActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(this, UsersNewGroupActivity.class);
             intent.putExtra("group_name", txtNameNewGroup.getText().toString());
-            intent.putExtra("local_user", localUser);
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao verificar nome do grupo", Toast.LENGTH_LONG).show();

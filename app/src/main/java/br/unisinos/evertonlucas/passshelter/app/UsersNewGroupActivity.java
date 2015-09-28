@@ -78,7 +78,7 @@ public class UsersNewGroupActivity extends AppCompatActivity implements Confirma
         String groupName = extras.getString("group_name");
         this.groupName = groupName;
         setTitle(groupName);
-        localUser = extras.getString("local_user");
+        localUser = PassShelterApp.getLocalUser();
         try {
             Group group = this.groupsService.getGroupByName(groupName);
             if (group != null) {
@@ -200,7 +200,6 @@ public class UsersNewGroupActivity extends AppCompatActivity implements Confirma
 
     private void openGroupsActivity() {
         Intent intent = new Intent(this, GroupsActivity.class);
-        intent.putExtra("local_user", localUser);
         startActivity(intent);
     }
 
@@ -211,7 +210,6 @@ public class UsersNewGroupActivity extends AppCompatActivity implements Confirma
     }
 
     private void defineExtras(Intent intent) {
-        intent.putExtra("local_user", localUser);
         intent.putExtra("group_name", groupName);
     }
 

@@ -174,7 +174,6 @@ public class Main extends AppCompatActivity implements UpdateStatus{
     private void startGroupsActivity() {
         try {
             Intent intent = new Intent(this, GroupsActivity.class);
-            intent.putExtra("local_user", localUserRep.getUser());
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao abrir tela de grupos", Toast.LENGTH_LONG).show();
