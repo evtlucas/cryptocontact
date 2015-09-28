@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="br.unisinos.evertonlucas.passshelter.app.UsersNewGroupActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/horizontal_app_margin"
+        android:layout_marginTop="@dimen/top_button_margin"
+        android:text="@string/lbl_users_group"
+        android:textSize="@dimen/font_size_resource" />
+
+    <br.unisinos.evertonlucas.passshelter.view.DelayAutoCompleteTextView
+        android:id="@+id/txt_search_user_new_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:hint="Informe o email dos usuários"
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"
+        android:textSize="@dimen/font_size_resource" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="@dimen/horizontal_app_margin"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/lst_users_new_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
+
+</LinearLayout>

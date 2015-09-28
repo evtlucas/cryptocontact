@@ -16,67 +16,85 @@ limitations under the License.
 
 package br.unisinos.evertonlucas.passshelter.rep;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.security.spec.InvalidKeySpecException;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
-import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
+import br.unisinos.evertonlucas.passshelter.data.DbHelper;
+import br.unisinos.evertonlucas.passshelter.model.User;
+import br.unisinos.evertonlucas.passshelter.util.KeyFactory;
 
 /**
- * Class responsible for persist user data
- * Created by everton on 06/09/15.
+ * Class responsible for persist Users
+ * Created by everton on 27/09/15.
  */
 public class UserRep {
-    private Context context;
-    private SymmetricEncryption encryption;
 
-    public UserRep(Context context, SymmetricEncryption encryption) {
-        this.context = context;
-        this.encryption = encryption;
+    private DbHelper dbHelper;
+    private SQLiteDatabase db;
+
+    public UserRep(Context context) {
+        dbHelper = new DbHelper(context);
     }
 
-    public void saveUser(String user) throws IllegalBlockSizeException, InvalidKeyException,
-            BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        byte[] encryptedUser = this.encryption.encrypt(user.getBytes());
-        SharedPrefUtil.writeByteTo(this.context, SharedPrefUtil.KEYCHAIN_PREF,
-                SharedPrefUtil.KEYCHAIN_PREF_USER, encryptedUser);
+    public void insert(User user) {
+        db = dbHelper.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put("email", user.getEmail());
+        cv.put("public_key", user.getPublicKey().getEncoded());
+
+        long id = db.insertOrThrow(DbHelper.USERS, null, cv);
+        if (id > -1) {
+            user.setId(id);
+            close();
+        } else {
+            close();
+            throw new RuntimeException("Db Insertion Error");
+        }
     }
 
-    public String getUser() throws IllegalBlockSizeException, InvalidKeyException,
-            BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        byte[] encryptedUser = SharedPrefUtil.readByteFrom(this.context, SharedPrefUtil.KEYCHAIN_PREF,
-                SharedPrefUtil.KEYCHAIN_PREF_USER);
-        byte[] arrUser = this.encryption.decrypt(encryptedUser);
-        return new String(arrUser);
+    private void close() {
+        db.close();
+        dbHelper.close();
     }
 
-    public void savePassword(String pwd) throws NoSuchAlgorithmException {
-        byte[] encryptedPwd = getEncryptedPwd(pwd);
-        SharedPrefUtil.writeByteTo(this.context, SharedPrefUtil.KEYCHAIN_PREF,
-                SharedPrefUtil.KEYCHAIN_PREF_PWD, encryptedPwd);
+    public User getUserByEmail(String email) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return searchUser("email = ?", new String[] { email });
     }
 
-    private byte[] getEncryptedPwd(String pwd) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        return md.digest(pwd.getBytes());
+    public User getUserById(int id) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        return searchUser("_id = ?", new String[] { Integer.toString(id) });
     }
 
-    public boolean validatePassword(String pwd) throws NoSuchAlgorithmException {
-        byte[] encryptedPwd = getEncryptedPwd(pwd);
-        byte[] storedPwd = SharedPrefUtil.readByteFrom(this.context, SharedPrefUtil.KEYCHAIN_PREF,
-                SharedPrefUtil.KEYCHAIN_PREF_PWD);
-        return Arrays.equals(encryptedPwd, storedPwd);
+    @Nullable
+    private User searchUser(String selection, String[] selectionArgs) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        User user = null;
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(DbHelper.USERS, DbHelper.USERS_COLUMNS, selection, selectionArgs, null, null, "email");
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            user = new User();
+            user.setId(cursor.getLong(0));
+            user.setEmail(cursor.getString(1));
+            user.setPublicKey(KeyFactory.generatePublicKey(cursor.getBlob(2)));
+        }
+        return user;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void deleteUser(User user) {
+        db = dbHelper.getWritableDatabase();
+        db.delete(DbHelper.USERS, "_id = ?", new String[]{user.getId().toString()});
+        db.close();
+    }
+
+    public void save(User user) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        if (user.getId() == null)
+            insert(user);
     }
 }

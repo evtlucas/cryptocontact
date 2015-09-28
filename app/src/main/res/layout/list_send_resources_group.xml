@@ -23,7 +23,7 @@ limitations under the License.
     android:background="@drawable/background_list_resouces">
 
     <TextView
-        android:id="@+id/txtSendResource"
+        android:id="@+id/txt_send_resource_group"
         android:textSize="@dimen/font_size_resource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@ limitations under the License.
         android:layout_gravity="left|center_vertical" />
 
     <ImageButton
-        android:id="@+id/btnSendResource"
+        android:id="@+id/btn_send_resource_group"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

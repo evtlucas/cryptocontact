@@ -25,8 +25,8 @@ import br.unisinos.evertonlucas.passshelter.encryption.PrivateAssymetricCryptogr
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
 
 /**
  * Class responsible for verify existent resources on cloud
@@ -37,20 +37,20 @@ public class VerifyResourceService {
     private KeyService keyService;
     private ResourceRep resourceRep;
     private ParseData parseData;
-    private UserRep userRep;
+    private LocalUserRep localUserRep;
 
     public VerifyResourceService(Context context, KeyService service, ResourceRep resourceRep,
-                                 ParseData parseData, UserRep userRep) {
+                                 ParseData parseData, LocalUserRep localUserRep) {
         this.context = context;
         this.keyService = service;
         this.resourceRep = resourceRep;
         this.parseData = parseData;
-        this.userRep = userRep;
+        this.localUserRep = localUserRep;
     }
 
     public void verifyResource() throws Exception {
         SymmetricEncryption symmetricEncryption = keyService.getSymmetricEncryption();
-        String localUser = this.userRep.getUser();
+        String localUser = this.localUserRep.getUser();
         CertificateBag bag = this.keyService.getCertificateBag();
         PrivateAssymetricCryptography cryptography = new PrivateAssymetricCryptography(bag.getPrivateKey());
         List<Resource> resources = parseData.getExternalResources(localUser, cryptography, symmetricEncryption);

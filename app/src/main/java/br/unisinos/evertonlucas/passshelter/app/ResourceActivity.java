@@ -130,9 +130,18 @@ public class ResourceActivity extends AppCompatActivity implements UpdateStatus,
             case R.id.action_gen_key:
                 generateNewPassword();
                 return true;
+            case R.id.action_send_resource_to_group:
+                sendResourceToGroup();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sendResourceToGroup() {
+        Intent intent = new Intent(this, SendResourceGroupActivity.class);
+        intent.putExtra("resourceName", txtResource.getText().toString());
+        startActivity(intent);
     }
 
     private void generateNewPassword() {

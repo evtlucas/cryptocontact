@@ -30,7 +30,7 @@ import java.security.NoSuchAlgorithmException;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.service.InstallService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.service.LoginService;
@@ -40,7 +40,7 @@ import static br.unisinos.evertonlucas.passshelter.app.PassShelterApp.getInstanc
 
 public class LoginActivity extends AppCompatActivity implements UpdateStatus {
 
-    private UserRep userRep;
+    private LocalUserRep localUserRep;
     private EditText txtLoginPassword;
     private InstallService installService;
     private ProgressDialog progressDialog;
@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
     public void update(boolean status) {
         progressDialog.dismiss();
         this.installService.setContext(this);
-        this.userRep = PassShelterApp.createUserRep(this, keyService.getSymmetricEncryption());
-        this.loginService = new LoginService(this, this.userRep, this.installService);
+        this.localUserRep = PassShelterApp.createUserRep(this, keyService.getSymmetricEncryption());
+        this.loginService = new LoginService(this, this.localUserRep, this.installService);
     }
 }

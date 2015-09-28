@@ -13,11 +13,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
 
-import static org.mockito.Mockito.*;
-
 import javax.security.auth.x500.X500Principal;
 
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Created by everton on 07/08/15.
@@ -34,7 +34,7 @@ public class TestKeyGenerationUtil {
         return bag;
     }
 
-    private static KeyPair getKeyPair() throws NoSuchAlgorithmException {
+    public static KeyPair getKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(256);
         return generator.generateKeyPair();

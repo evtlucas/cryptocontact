@@ -59,6 +59,46 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.unisinos.evertonlucas.passshelter.app.ResourceActivity" />
         </activity>
+        <activity
+            android:name=".app.GroupsActivity"
+            android:label="@string/title_activity_groups"
+            android:parentActivityName=".app.Main" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.unisinos.evertonlucas.passshelter.app.Main" />
+        </activity>
+        <activity
+            android:name=".app.NewGroupActivity"
+            android:label="@string/title_activity_activity_new_group"
+            android:parentActivityName=".app.GroupsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.unisinos.evertonlucas.passshelter.app.GroupsActivity" />
+        </activity>
+        <activity
+            android:name=".app.UsersNewGroupActivity"
+            android:label="@string/title_activity_users_new_group"
+            android:parentActivityName=".app.NewGroupActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.unisinos.evertonlucas.passshelter.app.NewGroupActivity" />
+        </activity>
+        <activity
+            android:name=".app.GroupActivity"
+            android:label="@string/title_activity_group"
+            android:parentActivityName=".app.GroupsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.unisinos.evertonlucas.passshelter.app.GroupsActivity" />
+        </activity>
+        <activity
+            android:name=".app.SendResourceGroupActivity"
+            android:label="@string/title_activity_send_resource_group"
+            android:parentActivityName=".app.ResourceActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.unisinos.evertonlucas.passshelter.app.ResourceActivity" />
+        </activity>
     </application>
 
 </manifest>

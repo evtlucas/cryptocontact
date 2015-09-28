@@ -33,7 +33,7 @@ import br.unisinos.evertonlucas.passshelter.app.LoginActivity;
 import br.unisinos.evertonlucas.passshelter.app.PassShelterApp;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.util.NetworkUtil;
 import br.unisinos.evertonlucas.passshelter.util.ParseUtil;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
@@ -75,11 +75,11 @@ public class InstallService implements InstallStepFinished, Serializable {
 
     private void sendUserToCloud() {
         KeyService keyService = PassShelterApp.getInstance().getKeyService();
-        UserRep userRep = PassShelterApp.createUserRep(this.context, keyService.getSymmetricEncryption());
+        LocalUserRep localUserRep = PassShelterApp.createUserRep(this.context, keyService.getSymmetricEncryption());
         try {
             NetworkUtil.verifyNetwork(this.context);
             ProgressDialog dialog = ProgressDialogUtil.createProgressDialog(this.context, "Aguarde enquanto o usuário é salvo");
-            String email = userRep.getUser();
+            String email = localUserRep.getUser();
             CertificateBag cert = keyService.getCertificateBag();
             ParseData parseData = new ParseData();
             parseData.saveUser(email, cert);

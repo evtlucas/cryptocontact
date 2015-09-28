@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.service.InstallService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 
@@ -37,7 +37,8 @@ public class PassShelterApp extends Application implements Serializable {
     private InstallService service = null;
     private static PassShelterApp singleton;
     private KeyService keyService = null;
-    private UserRep userRepository = null;
+    private LocalUserRep localUserRepository = null;
+    private static String localUser = "";
 
     @Override
     public void onCreate() {
@@ -69,12 +70,20 @@ public class PassShelterApp extends Application implements Serializable {
         return getInstance().keyService;
     }
 
-    public static UserRep createUserRep(Context context, SymmetricEncryption symmetricEncryption) {
-        if (getInstance().userRepository == null) {
-            getInstance().userRepository = new UserRep(context, symmetricEncryption);
+    public static LocalUserRep createUserRep(Context context, SymmetricEncryption symmetricEncryption) {
+        if (getInstance().localUserRepository == null) {
+            getInstance().localUserRepository = new LocalUserRep(context, symmetricEncryption);
         } else {
-            getInstance().userRepository.setContext(context);
+            getInstance().localUserRepository.setContext(context);
         }
-        return getInstance().userRepository;
+        try {
+            localUser = getInstance().localUserRepository.getUser();
+        } catch (Exception e) {
+        }
+        return getInstance().localUserRepository;
+    }
+
+    public static String getLocalUser() {
+        return localUser;
     }
 }

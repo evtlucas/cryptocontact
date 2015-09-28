@@ -49,8 +49,8 @@ import br.unisinos.evertonlucas.passshelter.async.VerifyProcessAsyncTask;
 import br.unisinos.evertonlucas.passshelter.data.ExportSecretKeyData;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 
@@ -63,7 +63,7 @@ public class Main extends AppCompatActivity implements UpdateStatus{
     private ResourceRep resourceRep;
     private ListView listView;
     private ProgressDialog progressDialog;
-    private UserRep userRep;
+    private LocalUserRep localUserRep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class Main extends AppCompatActivity implements UpdateStatus{
         try {
             this.service = PassShelterApp.createKeyService(this, this);
             this.resourceRep = new ResourceRep(this, this.service.getSymmetricEncryption());
-            this.userRep = PassShelterApp.createUserRep(this, this.service.getSymmetricEncryption());
+            this.localUserRep = PassShelterApp.createUserRep(this, this.service.getSymmetricEncryption());
 
             loadListView();
         } catch (Exception e) {
@@ -155,11 +155,7 @@ public class Main extends AppCompatActivity implements UpdateStatus{
                 verifyResources();
                 return true;
             case R.id.action_backup:
-                try {
-                    service.exportCryptographicKey();
-                } catch (Exception e) {
-                    ExportSecretKeyData.throwException(e, this);
-                }
+                exportCryptographicKey();
                 return true;
             case R.id.action_restore:
                 service.importCryptographicKey();
@@ -167,15 +163,37 @@ public class Main extends AppCompatActivity implements UpdateStatus{
             case R.id.action_add:
                 startActivity(new Intent(this, ResourceActivity.class));
                 return true;
+            case R.id.action_group:
+                startGroupsActivity();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void startGroupsActivity() {
+        try {
+            Intent intent = new Intent(this, GroupsActivity.class);
+            intent.putExtra("local_user", localUserRep.getUser());
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao abrir tela de grupos", Toast.LENGTH_LONG).show();
+            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao abrir tela de grupos", e);
+        }
+    }
+
+    private void exportCryptographicKey() {
+        try {
+            service.exportCryptographicKey();
+        } catch (Exception e) {
+            ExportSecretKeyData.throwException(e, this);
+        }
+    }
+
     private void verifyResources() {
         this.progressDialog = ProgressDialogUtil.createProgressDialog(this, getString(R.string.process_verify_resources));
         try {
-            new VerifyProcessAsyncTask(this, service, resourceRep, this, new ParseData(), userRep)
+            new VerifyProcessAsyncTask(this, service, resourceRep, this, new ParseData(), localUserRep)
                     .execute();
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao verificar recursos", Toast.LENGTH_LONG).show();

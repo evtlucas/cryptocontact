@@ -22,8 +22,8 @@ import android.util.Log;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.service.VerifyResourceService;
 
@@ -38,21 +38,21 @@ public class VerifyProcessAsyncTask  extends AsyncTask<Void, Void, Boolean> {
     private ResourceRep resourceRep;
     private UpdateStatus updateStatus;
     private ParseData parseData;
-    private UserRep userRep;
+    private LocalUserRep localUserRep;
 
     public VerifyProcessAsyncTask(Context context, KeyService service, ResourceRep resourceRep,
-                                  UpdateStatus updateStatus, ParseData parseData, UserRep userRep) {
+                                  UpdateStatus updateStatus, ParseData parseData, LocalUserRep localUserRep) {
         this.context = context;
         this.service = service;
         this.resourceRep = resourceRep;
         this.updateStatus = updateStatus;
         this.parseData = parseData;
-        this.userRep = userRep;
+        this.localUserRep = localUserRep;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        VerifyResourceService verifyResourceService = new VerifyResourceService(context, service, resourceRep, parseData, userRep);
+        VerifyResourceService verifyResourceService = new VerifyResourceService(context, service, resourceRep, parseData, localUserRep);
         try {
             verifyResourceService.verifyResource();
         } catch (Exception e) {

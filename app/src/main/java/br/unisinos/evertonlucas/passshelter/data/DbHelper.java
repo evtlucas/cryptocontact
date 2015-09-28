@@ -29,7 +29,13 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE = "db";
     private static final int VERSION = 1;
     public static final String RESOURCE = "resource";
+    public static final String GROUPS = "groups";
+    public static final String USERS = "users";
+    public static final String USERS_GROUPS = "users_groups";
     public static final String[] RESOURCE_COLUMNS = new String[] { "_id", "name", "user", "password"};
+    public static final String[] GROUPS_COLUMNS = new String[] { "_id", "name", "admin"};
+    public static final String[] USERS_COLUMNS = new String[] { "_id", "email", "public_key"};
+    public static final String[] USERS_GROUPS_COLUMNS = new String[] { "idgroup", "iduser" };
 
     public DbHelper(Context context) {
         super(context, DATABASE, null, VERSION);
@@ -38,6 +44,9 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE resource (_id INTEGER PRIMARY KEY, name TEXT unique, user BLOB, password BLOB)");
+        db.execSQL("CREATE TABLE groups (_id INTEGER PRIMARY KEY, name TEXT unique, admin TEXT)");
+        db.execSQL("CREATE TABLE users (_id INTEGER PRIMARY KEY, email TEXT unique, public_key BLOB)");
+        db.execSQL("CREATE TABLE users_groups (idgroup INTEGER, iduser INTEGER, PRIMARY KEY (idgroup, iduser))");
     }
 
     @Override

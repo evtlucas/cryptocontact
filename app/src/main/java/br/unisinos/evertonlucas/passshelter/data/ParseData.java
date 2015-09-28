@@ -25,11 +25,9 @@ import com.parse.ParseQuery;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +42,9 @@ import br.unisinos.evertonlucas.passshelter.encryption.PrivateAssymetricCryptogr
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.model.ExternalResource;
-import br.unisinos.evertonlucas.passshelter.model.ExternalUser;
+import br.unisinos.evertonlucas.passshelter.model.ParseUser;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
+import br.unisinos.evertonlucas.passshelter.util.KeyFactory;
 
 /**
  * Class created for parse.com integration
@@ -61,7 +60,7 @@ public class ParseData {
         user.saveInBackground();
     }
 
-    public void getEMailUsers(final String email, final FinishedFind find) {
+    public void getExternalUsers(final String email, final FinishedFind find) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereStartsWith("email", email);
         query.setLimit(10);
@@ -82,17 +81,31 @@ public class ParseData {
         });
     }
 
-    public ExternalUser getExternalUser(String email) throws ParseException, NoSuchAlgorithmException,
+    public List<ParseUser> getExternalUsers(final String email) throws ParseException,
+            InvalidKeySpecException, NoSuchAlgorithmException {
+        List<ParseUser> listEmail = new ArrayList<>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+        query.whereStartsWith("email", email);
+        query.setLimit(7);
+        List<ParseObject> list = query.find();
+        for(ParseObject user : list) {
+            PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
+            listEmail.add(new ParseUser(user.getString("email"), key));
+        }
+        return listEmail;
+    }
+
+    public ParseUser getExternalUser(String email) throws ParseException, NoSuchAlgorithmException,
             InvalidKeySpecException {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereEqualTo("email", email);
         List<ParseObject> objects = query.find();
         if (objects.size() == 0)
-            return new ExternalUser(null, null);
+            return new ParseUser(null, null);
         else {
             ParseObject user = objects.get(0);
-            PublicKey key = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(user.getBytes("public_key")));
-            return new ExternalUser(user.getString("email"), key);
+            PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
+            return new ParseUser(user.getString("email"), key);
         }
     }
 

@@ -14,32 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package br.unisinos.evertonlucas.passshelter.model;
+package br.unisinos.evertonlucas.passshelter.util;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 /**
- * Class responsible for represent a resource which comes from Parse.com
- * Created by everton on 20/09/15.
+ * Class responsible for encapsulate generation key objects
+ * Created by everton on 27/09/15.
  */
-public class ExternalUser {
-    private final String email;
-    private final PublicKey publicKey;
-
-    public ExternalUser(String email, PublicKey publicKey) {
-        this.email = email;
-        this.publicKey = publicKey;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public PublicKey getPublicKey() {
-        return publicKey;
-    }
-
-    public boolean isValid() {
-        return (this.email != null) || (this.publicKey != null);
+public class KeyFactory {
+    public static PublicKey generatePublicKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return java.security.KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(bytes));
     }
 }

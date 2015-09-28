@@ -28,7 +28,7 @@ import android.widget.Toast;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.service.InstallService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
@@ -37,7 +37,7 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
 
     private InstallService installService;
     private KeyService keyService;
-    private UserRep userRep;
+    private LocalUserRep localUserRep;
     private EditText edtEmail;
     private EditText edtPassword;
     private ProgressDialog progressDialog;
@@ -94,8 +94,8 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
             return;
         }
         try {
-            this.userRep.saveUser(this.edtEmail.getText().toString());
-            this.userRep.savePassword(this.edtPassword.getText().toString());
+            this.localUserRep.saveUser(this.edtEmail.getText().toString());
+            this.localUserRep.savePassword(this.edtPassword.getText().toString());
             this.installService.persistState(InstallState.USER_DEFINED);
             this.installService.finished(InstallState.USER_DEFINED);
         } catch (Exception e) {
@@ -109,7 +109,7 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
     @Override
     public void update(boolean status) {
         this.installService.setContext(this);
-        this.userRep = PassShelterApp.createUserRep(this, this.keyService.getSymmetricEncryption());
+        this.localUserRep = PassShelterApp.createUserRep(this, this.keyService.getSymmetricEncryption());
         progressDialog.dismiss();
     }
 }

@@ -16,6 +16,7 @@ limitations under the License.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:columnCount="3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/bottom_margin_item"
@@ -23,22 +24,11 @@ limitations under the License.
     android:background="@drawable/background_list_resouces">
 
     <TextView
-        android:id="@+id/txtSendResource"
+        android:id="@+id/txt_user_group"
         android:textSize="@dimen/font_size_resource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Teste"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="left|center_vertical" />
-
-    <ImageButton
-        android:id="@+id/btnSendResource"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="btnSendResource"
-        android:src="@drawable/ic_action_backup_black"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="right|center_vertical"/>
+        android:layout_gravity="start|center_vertical"/>
 
 </RelativeLayout>

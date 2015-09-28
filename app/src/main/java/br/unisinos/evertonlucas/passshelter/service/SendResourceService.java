@@ -34,10 +34,10 @@ import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.encryption.PublicAssymetricCryptography;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.ExternalResource;
-import br.unisinos.evertonlucas.passshelter.model.ExternalUser;
+import br.unisinos.evertonlucas.passshelter.model.ParseUser;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
 import br.unisinos.evertonlucas.passshelter.util.KeyGenerationUtil;
 
 /**
@@ -50,15 +50,15 @@ public class SendResourceService {
     private KeyService service;
     private ResourceRep resourceRep;
     private ParseData parseData;
-    private UserRep userRep;
+    private LocalUserRep localUserRep;
 
     public SendResourceService(Context context, KeyService service,
-                               ResourceRep resourceRep, ParseData parseData, UserRep userRep) {
+                               ResourceRep resourceRep, ParseData parseData, LocalUserRep localUserRep) {
         this.context = context;
         this.service = service;
         this.resourceRep = resourceRep;
         this.parseData = parseData;
-        this.userRep = userRep;
+        this.localUserRep = localUserRep;
     }
 
     public void sendResource(String email, String resourceName) throws NoSuchAlgorithmException,
@@ -68,13 +68,13 @@ public class SendResourceService {
         SymmetricEncryption encryption = new SymmetricEncryption(sessionKey);
         byte[] cryptedSessionKey = createCryptedSessionKey(email, sessionKey);
         Resource sendResource = createSendResource(resourceName, encryption);
-        ExternalResource externalResource = new ExternalResource(userRep.getUser(), email, cryptedSessionKey, sendResource);
+        ExternalResource externalResource = new ExternalResource(localUserRep.getUser(), email, cryptedSessionKey, sendResource);
         parseData.sendExternalResource(externalResource);
     }
 
     private byte[] createCryptedSessionKey(String email, SecretKey sessionKey) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, NoSuchProviderException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        ExternalUser externalUser = parseData.getExternalUser(email);
-        PublicAssymetricCryptography cryptography = new PublicAssymetricCryptography(externalUser.getPublicKey());
+        ParseUser parseUser = parseData.getExternalUser(email);
+        PublicAssymetricCryptography cryptography = new PublicAssymetricCryptography(parseUser.getPublicKey());
         return cryptography.encrypt(sessionKey.getEncoded());
     }
 

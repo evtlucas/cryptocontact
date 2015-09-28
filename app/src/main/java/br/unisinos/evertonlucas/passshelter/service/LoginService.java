@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 
 import br.unisinos.evertonlucas.passshelter.app.InstallState;
 import br.unisinos.evertonlucas.passshelter.app.Main;
-import br.unisinos.evertonlucas.passshelter.rep.UserRep;
+import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 
 /**
  * Class designed for the login process
@@ -31,17 +31,17 @@ import br.unisinos.evertonlucas.passshelter.rep.UserRep;
  */
 public class LoginService {
     private Context context;
-    private UserRep userRep;
+    private LocalUserRep localUserRep;
     private InstallService installService;
 
-    public LoginService(Context context, UserRep userRep, InstallService installService) {
+    public LoginService(Context context, LocalUserRep localUserRep, InstallService installService) {
         this.context = context;
-        this.userRep = userRep;
+        this.localUserRep = localUserRep;
         this.installService = installService;
     }
 
     public boolean login(String password) throws NoSuchAlgorithmException {
-        boolean validatePassword = userRep.validatePassword(password);
+        boolean validatePassword = localUserRep.validatePassword(password);
         if (validatePassword) {
             this.installService.persistState(InstallState.READY);
             this.context.startActivity(new Intent(this.context, Main.class));
