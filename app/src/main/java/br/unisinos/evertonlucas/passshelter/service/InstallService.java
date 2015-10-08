@@ -19,12 +19,9 @@ package br.unisinos.evertonlucas.passshelter.service;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.Serializable;
 
-import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.app.DefUserActivity;
 import br.unisinos.evertonlucas.passshelter.app.DigCertActivity;
 import br.unisinos.evertonlucas.passshelter.app.InstallState;
@@ -38,6 +35,7 @@ import br.unisinos.evertonlucas.passshelter.util.NetworkUtil;
 import br.unisinos.evertonlucas.passshelter.util.ParseUtil;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 /**
  * Class designed for manage initialization process
@@ -88,8 +86,7 @@ public class InstallService implements InstallStepFinished, Serializable {
         } catch (Exception e) {
             persistState(InstallState.CERTIFICATE_INSTALLED);
             finished(InstallState.CERTIFICATE_INSTALLED);
-            Toast.makeText(this.context, "Erro ao enviar dados para a nuvem", Toast.LENGTH_LONG).show();
-            Log.e(this.context.getResources().getString(R.string.app_name), "Exceção ao enviar dados para a nuvem", e);
+            ShowLogExceptionUtil.showAndLogException(this.context, "Erro ao enviar dados para a nuvem", e);
         }
     }
 

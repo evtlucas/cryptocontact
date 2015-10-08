@@ -19,7 +19,6 @@ package br.unisinos.evertonlucas.passshelter.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.rep.GroupsRep;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 public class NewGroupActivity extends AppCompatActivity {
 
@@ -77,8 +77,7 @@ public class NewGroupActivity extends AppCompatActivity {
             intent.putExtra("group_name", txtNameNewGroup.getText().toString());
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao verificar nome do grupo", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao verificar nome do grupo", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao verificar nome do grupo", e);
         }
     }
 }

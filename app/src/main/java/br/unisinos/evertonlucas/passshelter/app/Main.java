@@ -21,13 +21,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -44,6 +42,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import br.unisinos.evertonlucas.passshelter.R;
+import br.unisinos.evertonlucas.passshelter.analytics.AnalyticsMessage;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.async.VerifyProcessAsyncTask;
 import br.unisinos.evertonlucas.passshelter.data.ExportSecretKeyData;
@@ -53,12 +52,12 @@ import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 
 public class Main extends AppCompatActivity implements UpdateStatus{
 
     private Context myContext;
-    private Button button;
     private KeyService service;
     private ResourceRep resourceRep;
     private ListView listView;
@@ -80,8 +79,7 @@ public class Main extends AppCompatActivity implements UpdateStatus{
 
             loadListView();
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao iniciar tela principal", Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao iniciar tela principal", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela principal", e);
         }
     }
 
@@ -94,9 +92,9 @@ public class Main extends AppCompatActivity implements UpdateStatus{
         this.listView = (ListView) findViewById(R.id.list_view_main);
         this.listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         this.listView.setLongClickable(true);
-        this.listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     Map<String, String> resMap = (Map<String, String>) parent.getItemAtPosition(position);
                     Resource res = resourceRep.getResourceByName(resMap.get("name"));
@@ -104,10 +102,8 @@ public class Main extends AppCompatActivity implements UpdateStatus{
                     intent.putExtra("name", res.getName());
                     myContext.startActivity(intent);
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Erro ao editar recurso", Toast.LENGTH_LONG).show();
-                    Log.e("Pass Shelter", "Exceção ao editar recurso", e);
+                    ShowLogExceptionUtil.showAndLogException(myContext, "Erro ao abrir recurso para edição", e);
                 }
-                return false;
             }
         });
     }
@@ -161,7 +157,7 @@ public class Main extends AppCompatActivity implements UpdateStatus{
                 service.importCryptographicKey();
                 return true;
             case R.id.action_add:
-                startActivity(new Intent(this, ResourceActivity.class));
+                startResourceActivity();
                 return true;
             case R.id.action_group:
                 startGroupsActivity();
@@ -171,13 +167,18 @@ public class Main extends AppCompatActivity implements UpdateStatus{
         return super.onOptionsItemSelected(item);
     }
 
+    private void startResourceActivity() {
+        AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "startResourceActivity");
+        startActivity(new Intent(this, ResourceActivity.class));
+    }
+
     private void startGroupsActivity() {
         try {
+            AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "startGroupsActivity");
             Intent intent = new Intent(this, GroupsActivity.class);
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao abrir tela de grupos", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao abrir tela de grupos", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao abrir tela de grupos", e);
         }
     }
 
@@ -192,11 +193,11 @@ public class Main extends AppCompatActivity implements UpdateStatus{
     private void verifyResources() {
         this.progressDialog = ProgressDialogUtil.createProgressDialog(this, getString(R.string.process_verify_resources));
         try {
+            AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "verifyResources");
             new VerifyProcessAsyncTask(this, service, resourceRep, this, new ParseData(), localUserRep)
                     .execute();
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao verificar recursos", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao verificar recursos", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao verificar recursos", e);
             this.progressDialog.dismiss();
         }
     }
@@ -209,9 +210,12 @@ public class Main extends AppCompatActivity implements UpdateStatus{
                 if (this.progressDialog != null)
                     this.progressDialog.dismiss();
             } catch (Exception e) {
-                Toast.makeText(this, "Erro ao recarregar recursos", Toast.LENGTH_LONG).show();
-                Log.e(this.getResources().getString(R.string.app_name), "Exceção ao recarregar recursos", e);
+                ShowLogExceptionUtil.showAndLogException(this, "Erro ao recarregar recursos", e);
             }
+        } else {
+            Toast.makeText(this, "Erro ao recarregar recursos", Toast.LENGTH_LONG).show();
+            if (this.progressDialog != null)
+                this.progressDialog.dismiss();
         }
     }
 }

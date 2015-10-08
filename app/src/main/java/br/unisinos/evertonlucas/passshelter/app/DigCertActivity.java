@@ -18,16 +18,15 @@ package br.unisinos.evertonlucas.passshelter.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.service.InstallService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 public class DigCertActivity extends AppCompatActivity implements UpdateStatus {
 
@@ -43,8 +42,7 @@ public class DigCertActivity extends AppCompatActivity implements UpdateStatus {
         try {
             this.keyService = PassShelterApp.createKeyService(this, this);
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao iniciar tela de certificado digital", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao iniciar tela de certificado digital", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela de certificado digital", e);
         }
     }
 

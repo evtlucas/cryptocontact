@@ -35,6 +35,7 @@ import br.unisinos.evertonlucas.passshelter.service.InstallService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.service.LoginService;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 import static br.unisinos.evertonlucas.passshelter.app.PassShelterApp.getInstance;
 
@@ -62,8 +63,7 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
             this.progressDialog = ProgressDialogUtil.createProgressDialog(this, "Aguarde a leitura do Certificado Digital");
             this.keyService.loadCertificate();
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao iniciar tela de cadastro do usuário", Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao iniciar tela do cadastro do usuário", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela de cadastro do usuário", e);
         }
 
     }

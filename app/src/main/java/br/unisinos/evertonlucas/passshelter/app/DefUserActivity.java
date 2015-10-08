@@ -19,7 +19,6 @@ package br.unisinos.evertonlucas.passshelter.app;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +31,7 @@ import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.service.InstallService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
 
@@ -56,8 +56,7 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
             this.keyService.loadCertificate();
             progressDialog = ProgressDialogUtil.createProgressDialog(this, "Aguarde a leitura do Certificado Digital");
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao iniciar tela de cadastro do usuário", Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao iniciar tela do cadastro do usuário", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela de cadastro do usuário", e);
         }
     }
 
@@ -100,8 +99,7 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
             this.installService.finished(InstallState.USER_DEFINED);
         } catch (Exception e) {
             this.installService.persistState(InstallState.CERTIFICATE_INSTALLED);
-            Toast.makeText(this, "Exceção ao salvar usuário " + e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao salvar usuário", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao salvar usuário", e);
             finish();
         }
     }

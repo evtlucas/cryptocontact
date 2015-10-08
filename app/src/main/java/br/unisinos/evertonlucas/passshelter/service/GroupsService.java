@@ -36,10 +36,8 @@ public class GroupsService {
 
     private GroupsRep groupsRep;
     private UserRep userRep;
-    private final Context context;
 
     public GroupsService(Context context) {
-        this.context = context;
         this.groupsRep = new GroupsRep(context);
         this.userRep = new UserRep(context);
     }

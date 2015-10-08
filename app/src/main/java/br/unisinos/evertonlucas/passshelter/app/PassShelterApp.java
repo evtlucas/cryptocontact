@@ -20,8 +20,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+
 import java.io.Serializable;
 
+import br.unisinos.evertonlucas.passshelter.analytics.AnalyticsTrackers;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
@@ -39,6 +43,9 @@ public class PassShelterApp extends Application implements Serializable {
     private KeyService keyService = null;
     private LocalUserRep localUserRepository = null;
     private static String localUser = "";
+    public static GoogleAnalytics analytics;
+    public static Tracker tracker;
+
 
     @Override
     public void onCreate() {
@@ -46,6 +53,20 @@ public class PassShelterApp extends Application implements Serializable {
         singleton = this;
         service = new InstallService(this.getApplicationContext());
         service.initialize();
+
+        initializeGoogleAnalytics();
+    }
+
+    private void initializeGoogleAnalytics() {
+        AnalyticsTrackers.initialize(this.getApplicationContext());
+
+        analytics = GoogleAnalytics.getInstance(this);
+        analytics.setLocalDispatchPeriod(1800);
+
+        tracker = analytics.newTracker("UA-68582236-1"); // Replace with actual tracker/property Id
+        tracker.enableExceptionReporting(true);
+        tracker.enableAdvertisingIdCollection(true);
+        tracker.enableAutoActivityTracking(true);
     }
 
     public static PassShelterApp getInstance() {

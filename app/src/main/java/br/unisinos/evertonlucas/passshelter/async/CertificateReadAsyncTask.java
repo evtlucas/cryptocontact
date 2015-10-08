@@ -34,12 +34,12 @@ package br.unisinos.evertonlucas.passshelter.async;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.security.KeyChain;
-import android.util.Log;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 /**
  * Class responsible for read a certificate chain based on an alias.
@@ -68,7 +68,7 @@ public class CertificateReadAsyncTask extends AsyncTask<Void, Void, CertificateB
                 return new CertificateBag(null, null);
             bag = new CertificateBag(chain[0], privateKey);
         } catch (Exception e) {
-            Log.e("CryptoContact", "Error reading certificate bag: " + e.getMessage(), e);
+            ShowLogExceptionUtil.logException(this.ctx, "Error reading certificate bag", e);
             return new CertificateBag(null, null);
         }
         return bag;

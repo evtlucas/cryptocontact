@@ -36,7 +36,6 @@ public class Resource implements Serializable {
     private String user;
     private String password;
     private SymmetricEncryption encryption;
-    private byte[] cryptoPassword;
 
     public Resource(SymmetricEncryption encryption) {
         this.encryption = encryption;

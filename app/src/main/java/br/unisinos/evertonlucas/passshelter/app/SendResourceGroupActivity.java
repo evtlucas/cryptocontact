@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +45,7 @@ import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 public class SendResourceGroupActivity extends AppCompatActivity implements UpdateStatus {
 
@@ -123,8 +123,7 @@ public class SendResourceGroupActivity extends AppCompatActivity implements Upda
                     .execute(resourceName);
         } catch (Exception e) {
             this.progressDialog.dismiss();
-            Toast.makeText(this, "Erro ao enviar recurso", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao enviar recurso", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao enviar recurso", e);
         }
     }
 

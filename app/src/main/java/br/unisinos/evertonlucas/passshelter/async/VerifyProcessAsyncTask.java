@@ -18,14 +18,13 @@ package br.unisinos.evertonlucas.passshelter.async;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.service.VerifyResourceService;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 /**
  * Class designed for create thread for verify if existent resource to update/insert
@@ -56,11 +55,13 @@ public class VerifyProcessAsyncTask  extends AsyncTask<Void, Void, Boolean> {
         try {
             verifyResourceService.verifyResource();
         } catch (Exception e) {
-            Log.e(context.getResources().getString(R.string.app_name), "Exceção ao enviar recurso", e);
+            ShowLogExceptionUtil.logException(this.context, "Exceção ao verificar recursos", e);
             return false;
         }
         return true;
     }
+
+
 
     @Override
     protected void onPostExecute(Boolean status) {

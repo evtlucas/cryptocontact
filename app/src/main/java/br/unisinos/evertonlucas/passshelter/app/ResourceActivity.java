@@ -23,7 +23,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +36,7 @@ import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.PasswordGenerationUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 public class ResourceActivity extends AppCompatActivity implements UpdateStatus,
         DialogInterface.OnClickListener{
@@ -77,8 +77,7 @@ public class ResourceActivity extends AppCompatActivity implements UpdateStatus,
                 SharedPrefUtil.delete(this, SharedPrefUtil.RESOURCE, SharedPrefUtil.RESOURCE_NAME);
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao iniciar tela de recursos", Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao iniciar tela de recursos", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela de recursos", e);
         }
     }
 
@@ -182,8 +181,7 @@ public class ResourceActivity extends AppCompatActivity implements UpdateStatus,
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao salvar recurso", Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao salvar recurso", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao salvar recurso", e);
         }
     }
 

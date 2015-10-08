@@ -17,19 +17,15 @@ limitations under the License.
 package br.unisinos.evertonlucas.passshelter.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.encryption.AssymetricCryptography;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.util.KeyGenerationUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
-
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.makeText;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 /**
  * Class responsible for persist private key and its alias
@@ -48,8 +44,7 @@ public class PersistSecretData {
                 pKey = new SecretKeySpec(key, 0, key.length, "AES");
             }
         } catch (Exception e) {
-            makeText(context, "Erro ao ler dados criptográficos", LENGTH_LONG).show();
-            Log.e(context.getResources().getString(R.string.app_name), "Error during private key reading: ", e);
+            ShowLogExceptionUtil.logException(context, "Erro ao ler dados criptográficos", e);
         }
         return pKey;
     }
@@ -64,8 +59,7 @@ public class PersistSecretData {
             SharedPrefUtil.writeByteTo(context, SharedPrefUtil.KEYCHAIN_PREF,
                     SharedPrefUtil.KEYCHAIN_PREF_KEY, encodedKey);
         } catch (Exception e) {
-            makeText(context, "Erro ao atualizar certificado", LENGTH_LONG).show();
-            Log.e(context.getResources().getString(R.string.app_name), "Error during KeyService definition: ", e);
+            ShowLogExceptionUtil.logException(context, "Erro ao ler atualizar certificado", e);
         }
         return key;
     }

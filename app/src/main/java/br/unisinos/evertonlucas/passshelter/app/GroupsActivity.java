@@ -44,6 +44,7 @@ public class GroupsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
+
         lstGroups = (ListView) findViewById(R.id.list_view_groups);
 
         groupsRep = new GroupsRep(this);

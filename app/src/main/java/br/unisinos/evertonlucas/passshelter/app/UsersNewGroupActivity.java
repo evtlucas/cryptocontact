@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +44,7 @@ import br.unisinos.evertonlucas.passshelter.model.User;
 import br.unisinos.evertonlucas.passshelter.service.GroupsService;
 import br.unisinos.evertonlucas.passshelter.util.ConfirmationDialog;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 import br.unisinos.evertonlucas.passshelter.view.DelayAutoCompleteTextView;
 import br.unisinos.evertonlucas.passshelter.view.UsersAutoCompleteAdapter;
 
@@ -184,8 +184,7 @@ public class UsersNewGroupActivity extends AppCompatActivity implements Confirma
             this.groupsService.saveGroup(group, emailUsersGroup);
             redirectAfterSaveToCorrectActivity();
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao abrir tela de grupos", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao abrir tela de grupos", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao abrir tela de grupos", e);
         } finally {
             this.progressDialog.dismiss();
         }

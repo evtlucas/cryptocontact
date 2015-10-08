@@ -7,13 +7,11 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +22,7 @@ import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.model.Group;
 import br.unisinos.evertonlucas.passshelter.model.User;
 import br.unisinos.evertonlucas.passshelter.rep.GroupsRep;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 public class GroupActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
 
@@ -51,8 +50,7 @@ public class GroupActivity extends AppCompatActivity implements DialogInterface.
             txtGroupName.setText(groupName);
             loadListAdapter(lstUsersGroup, groupsRep.getUsersGroup(group), R.layout.list_users_group);
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao inicializar tela de grupo", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao inicializar tela de grupo", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao inicializar tela de grupo", e);
         }
     }
 
@@ -130,11 +128,9 @@ public class GroupActivity extends AppCompatActivity implements DialogInterface.
             groupsRep.save(group);
             navigateBack();
         } catch (SQLiteConstraintException e) {
-            Toast.makeText(this, "Grupo já existe", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Grupo já existe", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Grupo já existe", e);
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao salvar grupo", Toast.LENGTH_LONG).show();
-            Log.e(this.getResources().getString(R.string.app_name), "Exceção ao salvar grupo", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao salvar grupo", e);
         }
     }
 
