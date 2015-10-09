@@ -30,6 +30,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import java.net.ConnectException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -51,8 +52,10 @@ import br.unisinos.evertonlucas.passshelter.model.Resource;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
+import br.unisinos.evertonlucas.passshelter.util.NetworkUtil;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
+import br.unisinos.evertonlucas.passshelter.util.ToastUtil;
 
 
 public class Main extends AppCompatActivity implements UpdateStatus{
@@ -194,12 +197,15 @@ public class Main extends AppCompatActivity implements UpdateStatus{
         this.progressDialog = ProgressDialogUtil.createProgressDialog(this, getString(R.string.process_verify_resources));
         try {
             AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "verifyResources");
+            NetworkUtil.verifyNetwork(this);
             new VerifyProcessAsyncTask(this, service, resourceRep, this, new ParseData(), localUserRep)
                     .execute();
+        } catch (ConnectException e) {
+            ToastUtil.showToastMessage(this, getResources().getString(R.string.msg_no_connection));
         } catch (Exception e) {
             ShowLogExceptionUtil.showAndLogException(this, "Erro ao verificar recursos", e);
-            this.progressDialog.dismiss();
         }
+        this.progressDialog.dismiss();
     }
 
     @Override

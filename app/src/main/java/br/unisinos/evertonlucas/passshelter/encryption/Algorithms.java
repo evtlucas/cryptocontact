@@ -23,4 +23,5 @@ package br.unisinos.evertonlucas.passshelter.encryption;
 public interface Algorithms {
     String ASSYMETRIC = "RSA/ECB/PKCS1Padding";
     String SYMMETRIC = "AES";
+    String PROVIDER = "AndroidOpenSSL";
 }

@@ -26,6 +26,7 @@ import com.parse.ParseQuery;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
@@ -39,13 +40,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 import br.unisinos.evertonlucas.passshelter.app.FinishedFind;
 import br.unisinos.evertonlucas.passshelter.app.PassShelterApp;
+import br.unisinos.evertonlucas.passshelter.encryption.KeyFactory;
 import br.unisinos.evertonlucas.passshelter.encryption.PrivateAssymetricCryptography;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.model.ExternalResource;
 import br.unisinos.evertonlucas.passshelter.model.ParseUser;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
-import br.unisinos.evertonlucas.passshelter.util.KeyFactory;
 
 /**
  * Class created for parse.com integration
@@ -84,7 +85,7 @@ public class ParseData {
     }
 
     public List<ParseUser> getExternalUsers(final String email) throws ParseException,
-            InvalidKeySpecException, NoSuchAlgorithmException {
+            InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         List<ParseUser> listEmail = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereStartsWith("email", email);
@@ -99,10 +100,10 @@ public class ParseData {
     }
 
     public ParseUser getExternalUser(String email) throws ParseException, NoSuchAlgorithmException,
-            InvalidKeySpecException {
+            InvalidKeySpecException, NoSuchProviderException {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereEqualTo("email", email);
-        query.whereNotEqualTo("email", PassShelterApp.getLocalUser());
+        //query.whereNotEqualTo("email", PassShelterApp.getLocalUser());
         List<ParseObject> objects = query.find();
         if (objects.size() == 0)
             return new ParseUser(null, null);
@@ -136,7 +137,8 @@ public class ParseData {
         query.whereEqualTo("to", localUser);
         List<ParseObject> list = query.find();
         for(ParseObject object : list) {
-            byte[] sessionKey = cryptography.decrypt(object.getBytes("crypted_session_key"));
+            byte[] crypted_session_keys = object.getBytes("crypted_session_key");
+            byte[] sessionKey = cryptography.decrypt(crypted_session_keys);
             SecretKey key = new SecretKeySpec(sessionKey, "AES");
             SymmetricEncryption sessionDecrypt = new SymmetricEncryption(key);
             Resource resource = new Resource(symmetricEncryption);

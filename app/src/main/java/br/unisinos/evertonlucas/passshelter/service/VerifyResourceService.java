@@ -23,6 +23,7 @@ import java.util.List;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.encryption.PrivateAssymetricCryptography;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
+import br.unisinos.evertonlucas.passshelter.exception.NotFoundException;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
@@ -65,6 +66,8 @@ public class VerifyResourceService {
                 this.resourceRep.insertResource(resource);
             }
         }
+        if (resources.size() == 0)
+            throw new NotFoundException();
         parseData.deleteResources(localUser);
     }
 }

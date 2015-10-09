@@ -23,6 +23,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class GroupsRep {
         userRep = new UserRep(context);
     }
 
-    public void insert(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void insert(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         db = dbHelper.getWritableDatabase();
         ContentValues cv = transformGroupCv(group);
 
@@ -60,7 +61,7 @@ public class GroupsRep {
         }
     }
 
-    private void saveListUsers(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private void saveListUsers(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         for(User user : group.getUsers()) {
             userRep.save(user);
             ContentValues cv = new ContentValues();
@@ -83,7 +84,7 @@ public class GroupsRep {
         dbHelper.close();
     }
 
-    public Group getGroupByName(String name) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public Group getGroupByName(String name) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         Group group = null;
         db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(DbHelper.GROUPS, DbHelper.GROUPS_COLUMNS,
@@ -101,7 +102,7 @@ public class GroupsRep {
         return group;
     }
 
-    private List<User> getListUsers(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private List<User> getListUsers(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         List<User> lstUsers = new ArrayList<>();
         Cursor cursor = db.query(DbHelper.USERS_GROUPS, DbHelper.USERS_GROUPS_COLUMNS,
                 "idgroup = ?", new String[]{group.getId().toString()}, null, null, "idgroup");
@@ -114,7 +115,7 @@ public class GroupsRep {
         return lstUsers;
     }
 
-    public List<User> getUsersGroup(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public List<User> getUsersGroup(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         db = dbHelper.getReadableDatabase();
         List<User> lstUsers = getListUsers(group);
         close();
@@ -133,7 +134,7 @@ public class GroupsRep {
         return lstNames;
     }
 
-    public void update(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void update(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         db = dbHelper.getWritableDatabase();
         ContentValues cv = transformGroupCv(group);
         long result = db.update(DbHelper.GROUPS, cv, "_id = ?", new String[]{group.getId().toString()});
@@ -157,7 +158,7 @@ public class GroupsRep {
         db.close();
     }
 
-    public void save(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void save(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         if (group.getId() != null)
             update(group);
         else

@@ -94,4 +94,5 @@ limitations under the License.
     <string name="delete_group_confirmation">Confirma a exclusão do grupo?</string>
     <string name="title_activity_send_resource_group">Envio para grupo</string>
     <string name="send_resource_to_group">Enviar para grupo</string>
+    <string name="msg_no_connection">Sem conexão</string>
 </resources>

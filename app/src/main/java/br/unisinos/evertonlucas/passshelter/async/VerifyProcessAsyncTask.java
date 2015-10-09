@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
+import br.unisinos.evertonlucas.passshelter.exception.NotFoundException;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
@@ -54,6 +55,8 @@ public class VerifyProcessAsyncTask  extends AsyncTask<Void, Void, Boolean> {
         VerifyResourceService verifyResourceService = new VerifyResourceService(context, service, resourceRep, parseData, localUserRep);
         try {
             verifyResourceService.verifyResource();
+        } catch (NotFoundException e) {
+            return false;
         } catch (Exception e) {
             ShowLogExceptionUtil.logException(this.context, "Exceção ao verificar recursos", e);
             return false;

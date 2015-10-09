@@ -17,6 +17,7 @@ limitations under the License.
 package br.unisinos.evertonlucas.passshelter.model;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class Group {
         lstUsers.remove(user);
     }
 
-    public List<User> getUsers() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public List<User> getUsers() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         List<User> users = new ArrayList<>();
         for(User user : lstUsers)
             users.add(user.copy());

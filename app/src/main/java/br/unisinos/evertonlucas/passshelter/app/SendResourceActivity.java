@@ -29,6 +29,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.util.NetworkUtil;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
+import br.unisinos.evertonlucas.passshelter.util.ToastUtil;
 
 public class SendResourceActivity extends AppCompatActivity implements FinishedFind, UpdateStatus {
 
@@ -114,6 +116,8 @@ public class SendResourceActivity extends AppCompatActivity implements FinishedF
         try {
             NetworkUtil.verifyNetwork(this);
             parseData.getExternalUsers(this.txtDestinationEmail.getText().toString(), this);
+        } catch (ConnectException e) {
+            ToastUtil.showToastMessage(this, getResources().getString(R.string.msg_no_connection));
         } catch (Exception e) {
             this.progressDialog.dismiss();
             ShowLogExceptionUtil.showAndLogException(this, "Erro ao pesquisar usuários", e);

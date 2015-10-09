@@ -36,7 +36,7 @@ public class PublicAssymetricCryptography {
 
     public PublicAssymetricCryptography(PublicKey key) throws NoSuchPaddingException,
             NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
-        this.encCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, "AndroidOpenSSL");
+        this.encCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, Algorithms.PROVIDER);
         this.encCipher.init(Cipher.ENCRYPT_MODE, key);
     }
 

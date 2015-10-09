@@ -22,6 +22,7 @@ import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 
 import br.unisinos.evertonlucas.passshelter.model.Group;
@@ -47,7 +48,7 @@ public class GroupsRepTest extends AndroidTestCase {
         initializeGroup();
     }
 
-    private void initializeGroup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private void initializeGroup() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         insertGroup(name, admin);
     }
 
@@ -56,7 +57,7 @@ public class GroupsRepTest extends AndroidTestCase {
         groupsRep = null;
     }
 
-    public void testInsertGroup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testInsertGroup() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         String name = "Group2";
         String admin = "someone2@domain.com";
         Group group = insertGroup(name, admin);
@@ -70,7 +71,7 @@ public class GroupsRepTest extends AndroidTestCase {
         assertEquals(group.getAdmin(), groupQuery.getAdmin());
     }
 
-    public void testAvoidGroupDuplication() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testAvoidGroupDuplication() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         try {
             initializeGroup();
             fail("Could not reach here");
@@ -79,7 +80,7 @@ public class GroupsRepTest extends AndroidTestCase {
         }
     }
 
-    public void testUpdateGroup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testUpdateGroup() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         String name = "Group2";
         String admin = "someone2@domain.com";
         Group group = groupsRep.getGroupByName(this.name);
@@ -90,7 +91,7 @@ public class GroupsRepTest extends AndroidTestCase {
         testGroup(group, groupQuery);
     }
 
-    public void testAvoidDuplicateUpdate() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testAvoidDuplicateUpdate() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         try {
             String name = "Group3";
             String admin = "someone3@domain.com";
@@ -104,14 +105,14 @@ public class GroupsRepTest extends AndroidTestCase {
         }
     }
 
-    public void testDeleteGroup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testDeleteGroup() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         Group group = groupsRep.getGroupByName(this.name);
         groupsRep.delete(group);
         assertNull(groupsRep.getGroupByName(this.name));
         initializeGroup();
     }
 
-    public void testDeleteNotFoundGroup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testDeleteNotFoundGroup() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         Group group = new Group();
         group.setId(999999L);
         group.setName("Abc");
@@ -120,7 +121,7 @@ public class GroupsRepTest extends AndroidTestCase {
     }
 
     @NonNull
-    private Group insertGroup(String name, String admin) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private Group insertGroup(String name, String admin) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         Group group = instantiateGroup(name, admin);
         groupsRep.insert(group);
         return group;
@@ -134,7 +135,7 @@ public class GroupsRepTest extends AndroidTestCase {
         return group;
     }
 
-    public void testSaveUsersGroup() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public void testSaveUsersGroup() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
         String groupUsers = "GroupUsers";
         Group group = instantiateGroup(groupUsers, "abc@xyz.com");
         group.addUser(UserFactory.generateUser("def@xyz.com"));
@@ -152,7 +153,7 @@ public class GroupsRepTest extends AndroidTestCase {
         assertEquals(3, i);
     }
 
-    public void testUpdateExistentGroup() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testUpdateExistentGroup() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         Group group = groupsRep.getGroupByName(this.name);
         group.addUser(UserFactory.generateUser("def@xyz.com"));
         groupsRep.update(group);

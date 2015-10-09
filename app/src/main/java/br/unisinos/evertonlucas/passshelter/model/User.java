@@ -17,10 +17,11 @@ limitations under the License.
 package br.unisinos.evertonlucas.passshelter.model;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 
-import br.unisinos.evertonlucas.passshelter.util.KeyFactory;
+import br.unisinos.evertonlucas.passshelter.encryption.KeyFactory;
 
 /**
  * Class which represents an user
@@ -56,7 +57,7 @@ public class User {
         this.publicKey = publicKey;
     }
 
-    public User copy() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public User copy() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         User user = new User();
         user.setId(this.id);
         user.setEmail(this.email);

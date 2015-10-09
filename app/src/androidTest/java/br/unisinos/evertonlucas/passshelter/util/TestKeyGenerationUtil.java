@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
  * Created by everton on 07/08/15.
  */
 public class TestKeyGenerationUtil {
-    public static CertificateBag generate(Context ctx) throws NoSuchAlgorithmException, CertificateException {
+    public static CertificateBag generate(Context ctx) throws NoSuchAlgorithmException, CertificateException, NoSuchProviderException {
         KeyPairGeneratorSpec spec = getKeyPairGeneratorSpec(ctx);
         KeyPair pair = getKeyPair();
         X509Certificate cert = Mockito.mock(X509Certificate.class);
@@ -34,7 +35,7 @@ public class TestKeyGenerationUtil {
         return bag;
     }
 
-    public static KeyPair getKeyPair() throws NoSuchAlgorithmException {
+    public static KeyPair getKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(256);
         return generator.generateKeyPair();

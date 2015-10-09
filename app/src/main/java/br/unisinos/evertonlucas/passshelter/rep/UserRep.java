@@ -23,11 +23,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 
 import br.unisinos.evertonlucas.passshelter.data.DbHelper;
+import br.unisinos.evertonlucas.passshelter.encryption.KeyFactory;
 import br.unisinos.evertonlucas.passshelter.model.User;
-import br.unisinos.evertonlucas.passshelter.util.KeyFactory;
 
 /**
  * Class responsible for persist Users
@@ -64,16 +65,16 @@ public class UserRep {
         dbHelper.close();
     }
 
-    public User getUserByEmail(String email) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public User getUserByEmail(String email) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
         return searchUser("email = ?", new String[] { email });
     }
 
-    public User getUserById(int id) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public User getUserById(int id) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         return searchUser("_id = ?", new String[] { Integer.toString(id) });
     }
 
     @Nullable
-    private User searchUser(String selection, String[] selectionArgs) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private User searchUser(String selection, String[] selectionArgs) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
         User user = null;
         db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(DbHelper.USERS, DbHelper.USERS_COLUMNS, selection, selectionArgs, null, null, "email");

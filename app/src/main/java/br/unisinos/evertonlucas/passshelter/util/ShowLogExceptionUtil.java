@@ -18,7 +18,6 @@ package br.unisinos.evertonlucas.passshelter.util;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.analytics.AnalyticsException;
@@ -30,7 +29,7 @@ import br.unisinos.evertonlucas.passshelter.analytics.AnalyticsException;
 public class ShowLogExceptionUtil {
 
     public static void showAndLogException(Context context, String message, Exception e) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        ToastUtil.showToastMessage(context, message);
         Log.e(context.getResources().getString(R.string.app_name), message, e);
         AnalyticsException.sendExceptionInformation(context, e);
     }

@@ -19,7 +19,6 @@ package br.unisinos.evertonlucas.passshelter.app;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,8 +96,7 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
                 Toast.makeText(this, "Senha errada", Toast.LENGTH_LONG).show();
             }
         } catch (NoSuchAlgorithmException e) {
-            Toast.makeText(this, "Exceção ao salvar usuário " + e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e("Pass Shelter", "Exceção ao salvar usuário", e);
+            ShowLogExceptionUtil.showAndLogException(this, "Exceção ao salvar usuário", e);
         }
     }
 

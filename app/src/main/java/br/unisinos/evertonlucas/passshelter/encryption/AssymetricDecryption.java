@@ -25,6 +25,7 @@ import javax.crypto.IllegalBlockSizeException;
  * Created by everton on 20/09/15.
  */
 public class AssymetricDecryption {
+
     private final Cipher decCipher;
 
     public AssymetricDecryption(Cipher encCipher) {

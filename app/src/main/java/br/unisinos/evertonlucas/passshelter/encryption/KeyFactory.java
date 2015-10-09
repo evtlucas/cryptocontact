@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package br.unisinos.evertonlucas.passshelter.util;
+package br.unisinos.evertonlucas.passshelter.encryption;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -26,7 +27,8 @@ import java.security.spec.X509EncodedKeySpec;
  * Created by everton on 27/09/15.
  */
 public class KeyFactory {
-    public static PublicKey generatePublicKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return java.security.KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(bytes));
+    public static PublicKey generatePublicKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+        return java.security.KeyFactory
+                .getInstance("RSA").generatePublic(new X509EncodedKeySpec(bytes));
     }
 }

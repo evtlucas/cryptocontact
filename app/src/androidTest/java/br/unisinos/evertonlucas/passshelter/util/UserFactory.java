@@ -18,6 +18,7 @@ package br.unisinos.evertonlucas.passshelter.util;
 
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 import br.unisinos.evertonlucas.passshelter.model.User;
 
@@ -27,7 +28,7 @@ import br.unisinos.evertonlucas.passshelter.model.User;
  */
 public class UserFactory {
 
-    public static User generateUser(String email) throws NoSuchAlgorithmException {
+    public static User generateUser(String email) throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPair pair = TestKeyGenerationUtil.getKeyPair();
         User user = new User();
         user.setEmail(email);

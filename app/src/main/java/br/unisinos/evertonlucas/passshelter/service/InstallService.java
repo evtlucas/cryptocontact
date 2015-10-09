@@ -21,7 +21,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.io.Serializable;
+import java.net.ConnectException;
 
+import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.app.DefUserActivity;
 import br.unisinos.evertonlucas.passshelter.app.DigCertActivity;
 import br.unisinos.evertonlucas.passshelter.app.InstallState;
@@ -36,6 +38,7 @@ import br.unisinos.evertonlucas.passshelter.util.ParseUtil;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
+import br.unisinos.evertonlucas.passshelter.util.ToastUtil;
 
 /**
  * Class designed for manage initialization process
@@ -83,6 +86,8 @@ public class InstallService implements InstallStepFinished, Serializable {
             parseData.saveUser(email, cert);
             finished(InstallState.USER_CLOUD);
             dialog.dismiss();
+        } catch (ConnectException e) {
+            ToastUtil.showToastMessage(this.context, this.context.getString(R.string.msg_no_connection));
         } catch (Exception e) {
             persistState(InstallState.CERTIFICATE_INSTALLED);
             finished(InstallState.CERTIFICATE_INSTALLED);

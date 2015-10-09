@@ -20,15 +20,17 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.net.ConnectException;
+
 /**
  * Class used to verify if the device is connected
  * Created by everton on 09/09/15.
  */
 public class NetworkUtil {
-    public static void verifyNetwork(Context context) {
+    public static void verifyNetwork(Context context) throws ConnectException {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         if (info == null || !info.isConnectedOrConnecting())
-            throw new RuntimeException("Não existe conectividade");
+            throw new ConnectException("Não existe conectividade");
     }
 }

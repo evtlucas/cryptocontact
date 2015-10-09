@@ -21,6 +21,7 @@ import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
@@ -56,13 +57,13 @@ public class UserRepTest extends AndroidTestCase {
         this.userRep.insert(user);
     }
 
-    public void testInsertedUser() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testInsertedUser() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         User userQuery = this.userRep.getUserByEmail(user.getEmail());
         assertEquals(user.getEmail(), userQuery.getEmail());
         assertTrue(Arrays.equals(user.getPublicKey().getEncoded(), userQuery.getPublicKey().getEncoded()));
     }
 
-    public void testDeleteUser() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public void testDeleteUser() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
         String email = "xyz@xyz.com";
         User user = UserFactory.generateUser(email);
         user.setEmail(email);
@@ -71,7 +72,7 @@ public class UserRepTest extends AndroidTestCase {
         assertNull(this.userRep.getUserByEmail(email));
     }
 
-    public void testSaveExistentUser() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void testSaveExistentUser() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         try {
             User userQuery = this.userRep.getUserByEmail(user.getEmail());
             userRep.save(userQuery);

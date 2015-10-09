@@ -32,6 +32,7 @@ import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
  * Created by everton on 07/08/15.
  */
 public class AssymetricCryptography {
+
     private Cipher encCipher;
     private Cipher decCipher;
 
@@ -41,12 +42,12 @@ public class AssymetricCryptography {
     }
 
     private void initDecCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
-        this.decCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, "AndroidOpenSSL");
+        this.decCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, Algorithms.PROVIDER);
         this.decCipher.init(Cipher.DECRYPT_MODE, bag.getCert().getPublicKey());
     }
 
     private void initEncCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
-        this.encCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, "AndroidOpenSSL");
+        this.encCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, Algorithms.PROVIDER);
         this.encCipher.init(Cipher.ENCRYPT_MODE, bag.getPrivateKey());
     }
 

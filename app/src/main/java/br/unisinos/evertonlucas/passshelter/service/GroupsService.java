@@ -19,6 +19,7 @@ package br.unisinos.evertonlucas.passshelter.service;
 import android.content.Context;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class GroupsService {
         this.userRep = new UserRep(context);
     }
 
-    public Group getGroupByName(String name) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public Group getGroupByName(String name) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         return this.groupsRep.getGroupByName(name);
     }
 
