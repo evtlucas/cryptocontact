@@ -84,8 +84,10 @@ public class InitService implements InstallStepFinished, Serializable {
     public void initialize() {
         InstallState installState = getInstallState();
         if (this.updateNeeded) {
-            installState = prepareUpdate();
-            new UpdateService(this.context, this.versionCode, this.firstInstallation).update(null, null);
+            UpdateService updateService = new UpdateService(this.context, this.versionCode, this.firstInstallation);
+            if (updateService.isReinstallNeeded())
+                installState = prepareUpdate();
+            updateService.writeCurrentVersion();
         }
         startActivityFromState(installState);
     }

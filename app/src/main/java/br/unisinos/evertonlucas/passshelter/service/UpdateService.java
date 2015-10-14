@@ -38,8 +38,12 @@ public class UpdateService implements UpdateStatus {
         SharedPrefUtil.writeIntTo(this.context, SharedPrefUtil.RESOURCE, SharedPrefUtil.VERSION_CODE, versionCode);
     }
 
-    private void updateToVersion4() {
+    public void writeCurrentVersion() {
         writeCurrentVersion(this.versionCode);
+    }
+
+    private void updateToVersion4() {
+        writeCurrentVersion();
         /*try {
             KeyService service = PassShelterApp.getInstance().getKeyService();
             LocalUserRep rep = new LocalUserRep(this.context, service.getSymmetricEncryption());
@@ -56,5 +60,9 @@ public class UpdateService implements UpdateStatus {
             writeCurrentVersion(this.versionCode);
         }
         if (updateStatus != null) updateStatus.update(status);
+    }
+
+    public boolean isReinstallNeeded() {
+        return this.currentVersion < 4;
     }
 }
