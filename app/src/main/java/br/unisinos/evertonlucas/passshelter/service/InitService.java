@@ -121,8 +121,8 @@ public class InitService implements InstallStepFinished, Serializable {
         } catch (ConnectException e) {
             ToastUtil.showToastMessage(this.context, this.context.getString(R.string.msg_no_connection));
         } catch (Exception e) {
-            persistState(InstallState.CERTIFICATE_INSTALLED);
-            finished(InstallState.CERTIFICATE_INSTALLED);
+            persistState(InstallState.INITIAL);
+            finished(InstallState.INITIAL);
             ShowLogExceptionUtil.showAndLogException(this.context, "Erro ao enviar dados para a nuvem", e);
         }
     }

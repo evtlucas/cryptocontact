@@ -104,7 +104,7 @@ public class ParseData {
         query.whereNotEqualTo("email", PassShelterApp.getLocalUser());
         query.setLimit(7);
         List<ParseObject> list = query.find();
-        for(ParseObject user : list) {
+        for (ParseObject user : list) {
             PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
             listEmail.add(new ParseUser(user.getObjectId(), user.getString("email"), key));
         }
@@ -115,9 +115,13 @@ public class ParseData {
             InvalidKeySpecException, NoSuchProviderException {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereStartsWith("email", email.trim());
-        ParseObject user = query.getFirst();
-        PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
-        return new ParseUser(user.getObjectId(), user.getString("email"), key);
+        try {
+            ParseObject user = query.getFirst();
+            PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
+            return new ParseUser(user.getObjectId(), user.getString("email"), key);
+        } catch (Exception e) {
+            return new ParseUser(null, null, null);
+        }
     }
 
     public void sendExternalResource(ExternalResource externalResource) throws IllegalBlockSizeException,
@@ -142,7 +146,7 @@ public class ParseData {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ExternalResource");
         query.whereEqualTo("to", localUser);
         List<ParseObject> list = query.find();
-        for(ParseObject object : list) {
+        for (ParseObject object : list) {
             byte[] crypted_session_keys = object.getBytes("crypted_session_key");
             byte[] sessionKey = cryptography.decrypt(crypted_session_keys);
             SecretKey key = new SecretKeySpec(sessionKey, "AES");
@@ -160,7 +164,7 @@ public class ParseData {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ExternalResource");
         query.whereEqualTo("to", email);
         List<ParseObject> list = query.find();
-        for(ParseObject object : list)
+        for (ParseObject object : list)
             object.deleteInBackground();
     }
 }
