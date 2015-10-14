@@ -28,14 +28,13 @@ import android.widget.Toast;
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
-import br.unisinos.evertonlucas.passshelter.service.InstallService;
+import br.unisinos.evertonlucas.passshelter.service.InitService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
-import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
 
-    private InstallService installService;
+    private InitService initService;
     private KeyService keyService;
     private LocalUserRep localUserRep;
     private EditText edtEmail;
@@ -50,36 +49,42 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
         this.edtEmail = (EditText) findViewById(R.id.edtEmail);
         this.edtPassword = (EditText) findViewById(R.id.edtPassword);
 
-        this.installService = PassShelterApp.getInstance().getInstallService();
+        this.initService = PassShelterApp.getInstance().getInstallService();
         try {
             this.keyService = PassShelterApp.createKeyService(this, this);
-            this.keyService.loadCertificate();
-            progressDialog = ProgressDialogUtil.createProgressDialog(this, "Aguarde a leitura do Certificado Digital");
+            //this.keyService.loadCertificate();
+            //progressDialog = ProgressDialogUtil.createProgressDialog(this, "Aguarde a leitura do Certificado Digital");
         } catch (Exception e) {
             ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela de cadastro do usuário", e);
         }
     }
 
     @Override
+    public void update(boolean status) {
+        this.initService.setContext(this);
+        this.localUserRep = PassShelterApp.createUserRep(this, this.keyService.getSymmetricEncryption());
+        //progressDialog.dismiss();
+
+        try {
+            this.localUserRep.saveUser(this.edtEmail.getText().toString());
+            this.localUserRep.savePassword(this.edtPassword.getText().toString());
+            this.initService.persistState(InstallState.USER_DEFINED);
+            this.initService.finished(InstallState.USER_DEFINED);
+        } catch (Exception e) {
+            this.initService.persistState(InstallState.CERTIFICATE_INSTALLED);
+            ShowLogExceptionUtil.showAndLogException(this, "Erro ao salvar usuário", e);
+            finish();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_def_user, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        /*int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);*/
         return false;
     }
 
@@ -92,22 +97,6 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
             Toast.makeText(this, "Campo senha não pode ficar em branco", Toast.LENGTH_LONG).show();
             return;
         }
-        try {
-            this.localUserRep.saveUser(this.edtEmail.getText().toString());
-            this.localUserRep.savePassword(this.edtPassword.getText().toString());
-            this.installService.persistState(InstallState.USER_DEFINED);
-            this.installService.finished(InstallState.USER_DEFINED);
-        } catch (Exception e) {
-            this.installService.persistState(InstallState.CERTIFICATE_INSTALLED);
-            ShowLogExceptionUtil.showAndLogException(this, "Erro ao salvar usuário", e);
-            finish();
-        }
-    }
-
-    @Override
-    public void update(boolean status) {
-        this.installService.setContext(this);
-        this.localUserRep = PassShelterApp.createUserRep(this, this.keyService.getSymmetricEncryption());
-        progressDialog.dismiss();
+        this.keyService.installCertificate(this.edtEmail.getText().toString());
     }
 }

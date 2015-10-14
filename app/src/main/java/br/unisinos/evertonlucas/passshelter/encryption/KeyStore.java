@@ -14,36 +14,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package br.unisinos.evertonlucas.passshelter.util;
+package br.unisinos.evertonlucas.passshelter.encryption;
 
 import android.app.Activity;
-import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
 
 import java.util.concurrent.ExecutionException;
 
 import br.unisinos.evertonlucas.passshelter.async.CertificateReadAsyncTask;
+import br.unisinos.evertonlucas.passshelter.async.GenerateKeyPairAsyncTask;
 import br.unisinos.evertonlucas.passshelter.async.UpdateCertificate;
+import br.unisinos.evertonlucas.passshelter.util.KeyChainUtil;
 
 /**
- * Class responsible for communicate with KeyChain
+ * Class responsible for communicate with KeyChain and KeyStore
  * Created by everton on 20/07/15.
  */
-public class KeyStoreUtil {
+public class KeyStore {
 
     private final Activity activity;
 
-    public KeyStoreUtil(Activity activity) {
+    public KeyStore(Activity activity) {
         this.activity = activity;
     }
 
-    public void readCertificate(UpdateCertificate update, String alias)
+    public void readCertificate(UpdateCertificate update)
             throws ExecutionException, InterruptedException {
-        CertificateReadAsyncTask asyncTask = new CertificateReadAsyncTask(activity, update, alias);
+        CertificateReadAsyncTask asyncTask = new CertificateReadAsyncTask(activity, update);
         asyncTask.execute();
     }
 
     public void choosePrivateKeyAlias(KeyChainAliasCallback callback) {
-        KeyChain.choosePrivateKeyAlias(this.activity, callback, new String[]{"RSA"}, null, null, -1, null);
+        new KeyChainUtil().choosePrivateKeyAlias(this.activity, callback);;
+    }
+
+    public void generateInstallCertificate(UpdateCertificate update, String email) {
+        GenerateKeyPairAsyncTask genKeyPair = new GenerateKeyPairAsyncTask(activity, update, email);
+        genKeyPair.execute();
     }
 }

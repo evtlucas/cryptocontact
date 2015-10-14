@@ -43,7 +43,7 @@ public class AssymetricCryptography {
 
     private void initDecCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
         this.decCipher = Cipher.getInstance(Algorithms.ASSYMETRIC, Algorithms.PROVIDER);
-        this.decCipher.init(Cipher.DECRYPT_MODE, bag.getCert().getPublicKey());
+        this.decCipher.init(Cipher.DECRYPT_MODE, bag.getPublicKey());
     }
 
     private void initEncCipher(CertificateBag bag) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {

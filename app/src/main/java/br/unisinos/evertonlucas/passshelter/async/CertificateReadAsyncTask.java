@@ -33,45 +33,33 @@ package br.unisinos.evertonlucas.passshelter.async;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.security.KeyChain;
 
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
-
+import br.unisinos.evertonlucas.passshelter.data.KeyStoreData;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 /**
- * Class responsible for read a certificate chain based on an alias.
- * These class should be implemented as AsyncTask because getCertificateChain will block UI Thread
+ * Class responsible for reading certificate process by AsyncTask, because getCertificateChain will block UI Thread
  * Created by everton on 24/07/15.
  */
 public class CertificateReadAsyncTask extends AsyncTask<Void, Void, CertificateBag> {
 
     private final UpdateCertificate updateCertificate;
-    private final String alias;
     private final Context ctx;
 
-    public CertificateReadAsyncTask(Context ctx, UpdateCertificate updateCertificate, String alias) {
+    public CertificateReadAsyncTask(Context ctx, UpdateCertificate updateCertificate) {
         this.ctx = ctx;
         this.updateCertificate = updateCertificate;
-        this.alias = alias;
     }
 
     @Override
     protected CertificateBag doInBackground(Void... params) {
-        CertificateBag bag;
         try {
-            X509Certificate[] chain = KeyChain.getCertificateChain(ctx, alias);
-            PrivateKey privateKey = KeyChain.getPrivateKey(ctx, alias);
-            if ((chain == null) || (privateKey == null))
-                return new CertificateBag(null, null);
-            bag = new CertificateBag(chain[0], privateKey);
+            return new KeyStoreData(this.ctx).get();
         } catch (Exception e) {
             ShowLogExceptionUtil.logException(this.ctx, "Error reading certificate bag", e);
-            return new CertificateBag(null, null);
+            return new CertificateBag();
         }
-        return bag;
     }
 
     @Override

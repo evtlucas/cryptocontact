@@ -16,8 +16,9 @@ limitations under the License.
 
 package br.unisinos.evertonlucas.passshelter.model;
 
-import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 
 /**
  * Class designed for join X509 and Private Key
@@ -26,15 +27,35 @@ import java.security.cert.X509Certificate;
 public class CertificateBag {
 
     private X509Certificate cert;
-    private PrivateKey privateKey;
+    private RSAPrivateKey privateKey;
+    private RSAPublicKey publicKey;
 
-    public CertificateBag(X509Certificate cert, PrivateKey privateKey) {
+    public CertificateBag(X509Certificate cert, RSAPrivateKey privateKey) {
         this.cert = cert;
         this.privateKey = privateKey;
+        this.publicKey = null;
     }
 
-    public PrivateKey getPrivateKey() {
+    public CertificateBag(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
+        this.cert = null;
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
+    }
+
+    public CertificateBag() {
+        this.cert = null;
+        this.privateKey = null;
+        this.publicKey = null;
+    }
+
+    public RSAPrivateKey getPrivateKey() {
         return privateKey;
+    }
+
+    public RSAPublicKey getPublicKey() {
+        if (cert != null)
+            return (RSAPublicKey) cert.getPublicKey();
+        return this.publicKey;
     }
 
     public X509Certificate getCert() {
@@ -42,6 +63,6 @@ public class CertificateBag {
     }
 
     public boolean isValid() {
-        return cert != null && privateKey != null;
+        return ((cert != null) || (publicKey != null)) && privateKey != null;
     }
 }

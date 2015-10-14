@@ -33,6 +33,7 @@ import javax.crypto.SecretKey;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.encryption.PublicAssymetricCryptography;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
+import br.unisinos.evertonlucas.passshelter.exception.NotFoundException;
 import br.unisinos.evertonlucas.passshelter.model.ExternalResource;
 import br.unisinos.evertonlucas.passshelter.model.ParseUser;
 import br.unisinos.evertonlucas.passshelter.model.Resource;
@@ -74,6 +75,8 @@ public class SendResourceService {
 
     private byte[] createCryptedSessionKey(String email, SecretKey sessionKey) throws ParseException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, NoSuchProviderException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         ParseUser parseUser = parseData.getExternalUser(email);
+        if (!parseUser.isValid())
+            throw new NotFoundException();
         PublicAssymetricCryptography cryptography = new PublicAssymetricCryptography(parseUser.getPublicKey());
         return cryptography.encrypt(sessionKey.getEncoded());
     }

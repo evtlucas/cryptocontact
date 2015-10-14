@@ -87,8 +87,6 @@ public class SendResourceActivity extends AppCompatActivity implements FinishedF
         List<Map<String, String>> mapList = new ArrayList<>();
         for (String resource : resources) {
             Map<String, String> map = new HashMap<>();
-            if (resource.length() > 25)
-                resource = resource.substring(0, 25).concat("...");
             map.put("name", resource);
             mapList.add(map);
         }

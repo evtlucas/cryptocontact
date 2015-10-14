@@ -32,7 +32,7 @@ import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
 public class SharedPrefDataUtilTest extends AndroidTestCase {
 
     private static final String KEYCHAIN_PREF = "keychain";
-    private static final String KEYCHAIN_PREF_ALIAS = "alias";
+    private static final String KEYCHAIN_PREF_ALIAS = "ALIAS";
 
     public void testReadWriteByteValues() throws NoSuchAlgorithmException {
         RenamingMockContext mockContext = getRenamingMockContext();

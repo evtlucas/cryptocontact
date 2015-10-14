@@ -137,6 +137,11 @@ public class ResourceRep {
 
     public void delete(Resource resource) {
         db = dbHelper.getWritableDatabase();
-        db.delete(DbHelper.RESOURCE, "_id=?", new String[] {resource.getId().toString()});
+        db.delete(DbHelper.RESOURCE, "_id=?", new String[]{resource.getId().toString()});
+    }
+
+    public void deleteAll() {
+        db = dbHelper.getWritableDatabase();
+        db.delete(DbHelper.RESOURCE, null, null);
     }
 }

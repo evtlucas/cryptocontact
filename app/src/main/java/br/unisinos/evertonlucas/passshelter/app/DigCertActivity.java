@@ -24,32 +24,24 @@ import android.view.View;
 
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
-import br.unisinos.evertonlucas.passshelter.service.InstallService;
-import br.unisinos.evertonlucas.passshelter.service.KeyService;
-import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
+import br.unisinos.evertonlucas.passshelter.service.InitService;
 
 public class DigCertActivity extends AppCompatActivity implements UpdateStatus {
 
-    private InstallService installService;
-    private KeyService keyService;
+    private InitService initService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dig_cert);
 
-        this.installService = PassShelterApp.getInstance().getInstallService();
-        try {
-            this.keyService = PassShelterApp.createKeyService(this, this);
-        } catch (Exception e) {
-            ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela de certificado digital", e);
-        }
+        this.initService = PassShelterApp.getInstance().getInstallService();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        installService.setContext(getApplicationContext());
+        initService.setContext(getApplicationContext());
     }
 
     @Override
@@ -77,21 +69,22 @@ public class DigCertActivity extends AppCompatActivity implements UpdateStatus {
 
 
     public void btnInstallCertificate(View view) {
-        keyService.installCertificate();
+        InstallState state = InstallState.CERTIFICATE_INSTALLED;
+        initService.persistState(state);
+        initService.finished(state);
     }
 
     public void btnCancel(View view) {
         finish();
-        installService.cancel();
     }
 
     @Override
     public void update(boolean status) {
         InstallState state = status ? InstallState.CERTIFICATE_INSTALLED : InstallState.INITIAL;
-        installService.persistState(state);
+        initService.persistState(state);
         if (!status) {
             finish();
         }
-        installService.finished(state);
+        initService.finished(state);
     }
 }

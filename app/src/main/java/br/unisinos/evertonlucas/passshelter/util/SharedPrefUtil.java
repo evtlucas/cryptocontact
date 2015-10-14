@@ -27,13 +27,14 @@ import android.util.Base64;
 public class SharedPrefUtil {
 
     public static final String KEYCHAIN_PREF = "keychain";
-    public static final String KEYCHAIN_PREF_ALIAS = "alias";
+    public static final String KEYCHAIN_PREF_ALIAS = "ALIAS";
     public static final String KEYCHAIN_PREF_KEY = "key";
     public static final String KEYCHAIN_PREF_STATE = "state";
     public static final String KEYCHAIN_PREF_USER = "user";
     public static final String KEYCHAIN_PREF_PWD = "pwd";
     public static final String RESOURCE = "resource";
     public static final String RESOURCE_NAME = "name";
+    public static final String VERSION_CODE = "version_code";
 
     public static String readFrom(Context context, String name, String key) {
         SharedPreferences pref = context.getSharedPreferences(name, Context.MODE_PRIVATE);

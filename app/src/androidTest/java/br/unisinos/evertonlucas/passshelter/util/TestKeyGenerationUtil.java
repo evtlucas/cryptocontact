@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.Calendar;
 
 import javax.security.auth.x500.X500Principal;
@@ -31,7 +32,7 @@ public class TestKeyGenerationUtil {
         when(cert.getSerialNumber()).thenReturn(spec.getSerialNumber());
         when(cert.getSubjectDN()).thenReturn(spec.getSubjectDN());
         when(cert.getPublicKey()).thenReturn(pair.getPublic());
-        CertificateBag bag = new CertificateBag(cert, pair.getPrivate());
+        CertificateBag bag = new CertificateBag(cert, (RSAPrivateKey) pair.getPrivate());
         return bag;
     }
 

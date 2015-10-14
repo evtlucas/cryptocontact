@@ -39,6 +39,12 @@ import br.unisinos.evertonlucas.passshelter.util.TestKeyGenerationUtil;
 
 public class AssymetricCryptographyTest extends AndroidTestCase {
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        System.setProperty("dexmaker.dexcache", "/data/data/" + BuildConfig.APPLICATION_ID + ".test/cache");
+    }
+
     public void testEncryptionDecryption() throws CertificateException, NoSuchAlgorithmException,
             InvalidKeyException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException,
             NoSuchProviderException {

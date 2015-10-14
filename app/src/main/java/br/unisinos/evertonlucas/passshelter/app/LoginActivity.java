@@ -30,7 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import br.unisinos.evertonlucas.passshelter.R;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
-import br.unisinos.evertonlucas.passshelter.service.InstallService;
+import br.unisinos.evertonlucas.passshelter.service.InitService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.service.LoginService;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
 
     private LocalUserRep localUserRep;
     private EditText txtLoginPassword;
-    private InstallService installService;
+    private InitService initService;
     private ProgressDialog progressDialog;
     private KeyService keyService;
     private LoginService loginService;
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
         boolean init = extras.getBoolean("init");
         this.txtLoginPassword = (EditText) findViewById(R.id.txtLoginPassword);
 
-        this.installService = getInstance().getInstallService();
+        this.initService = getInstance().getInstallService();
         this.keyService = PassShelterApp.createKeyService(this, this);
         try {
             this.progressDialog = ProgressDialogUtil.createProgressDialog(this, "Aguarde a leitura do Certificado Digital");
@@ -94,6 +94,8 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
         try {
             if (!this.loginService.login(this.txtLoginPassword.getText().toString())) {
                 Toast.makeText(this, "Senha errada", Toast.LENGTH_LONG).show();
+            } else {
+                finish();
             }
         } catch (NoSuchAlgorithmException e) {
             ShowLogExceptionUtil.showAndLogException(this, "Exceção ao salvar usuário", e);
@@ -103,8 +105,8 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
     @Override
     public void update(boolean status) {
         progressDialog.dismiss();
-        this.installService.setContext(this);
+        this.initService.setContext(this);
         this.localUserRep = PassShelterApp.createUserRep(this, keyService.getSymmetricEncryption());
-        this.loginService = new LoginService(this, this.localUserRep, this.installService);
+        this.loginService = new LoginService(this, this.localUserRep, this.initService);
     }
 }

@@ -19,7 +19,10 @@ package br.unisinos.evertonlucas.passshelter.async;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.parse.ParseException;
+
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
+import br.unisinos.evertonlucas.passshelter.exception.NotFoundException;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
@@ -56,6 +59,12 @@ public class SendProcessAsyncTask extends AsyncTask<String, Void, Boolean> {
         SendResourceService sendResourceService = new SendResourceService(context, service, resourceRep, parseData, localUserRep);
         try {
             sendResourceService.sendResource(email, resourceName);
+        } catch (NotFoundException e) {
+            ShowLogExceptionUtil.logException(this.context, "Usuário não encontrado", e);
+            return false;
+        } catch (ParseException e) {
+            ShowLogExceptionUtil.logException(this.context, "Exceção da Cloud Parse.com", e);
+            return false;
         } catch (Exception e) {
             ShowLogExceptionUtil.logException(this.context, "Exceção ao enviar recurso", e);
             return false;

@@ -83,7 +83,8 @@ public class UserRep {
             user = new User();
             user.setId(cursor.getLong(0));
             user.setEmail(cursor.getString(1));
-            user.setPublicKey(KeyFactory.generatePublicKey(cursor.getBlob(2)));
+            user.setRemoteId(cursor.getString(2));
+            user.setPublicKey(KeyFactory.generatePublicKey(cursor.getBlob(3)));
         }
         return user;
     }
@@ -97,5 +98,11 @@ public class UserRep {
     public void save(User user) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (user.getId() == null)
             insert(user);
+    }
+
+    public void deleteAll() {
+        db = dbHelper.getWritableDatabase();
+        db.delete(DbHelper.USERS, null, null);
+        db.close();
     }
 }

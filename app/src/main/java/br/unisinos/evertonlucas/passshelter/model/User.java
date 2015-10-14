@@ -32,6 +32,7 @@ public class User {
     private Long id;
     private String email;
     private PublicKey publicKey;
+    private String remoteId;
 
     public Long getId() {
         return id;
@@ -57,10 +58,19 @@ public class User {
         this.publicKey = publicKey;
     }
 
+    public String getRemoteId() {
+        return remoteId;
+    }
+
+    public void setRemoteId(String remoteId) {
+        this.remoteId = remoteId;
+    }
+
     public User copy() throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         User user = new User();
         user.setId(this.id);
         user.setEmail(this.email);
+        user.setRemoteId(this.remoteId);
         user.setPublicKey(KeyFactory.generatePublicKey(this.publicKey.getEncoded()));
         return user;
     }

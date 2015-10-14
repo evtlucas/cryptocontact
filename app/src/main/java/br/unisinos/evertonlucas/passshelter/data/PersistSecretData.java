@@ -28,7 +28,7 @@ import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 /**
- * Class responsible for persist private key and its alias
+ * Class responsible for persist private key and its ALIAS
  * Created by everton on 11/08/15.
  */
 public class PersistSecretData {

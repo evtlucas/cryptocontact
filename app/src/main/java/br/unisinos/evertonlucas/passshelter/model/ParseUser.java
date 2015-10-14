@@ -24,12 +24,18 @@ import java.security.PublicKey;
  */
 public class ParseUser {
 
+    private final String id;
     private final String email;
     private final PublicKey publicKey;
 
-    public ParseUser(String email, PublicKey publicKey) {
+    public ParseUser(String id, String email, PublicKey publicKey) {
+        this.id = id;
         this.email = email;
         this.publicKey = publicKey;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -41,6 +47,6 @@ public class ParseUser {
     }
 
     public boolean isValid() {
-        return (this.email != null) || (this.publicKey != null);
+        return (this.id != null) && (this.email != null) && (this.publicKey != null);
     }
 }

@@ -33,4 +33,5 @@ limitations under the License.
     <dimen name="font_size_dig_cert">20sp</dimen>
     <dimen name="bottom_margin_item">10dp</dimen>
     <dimen name="top_margin_item">10dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

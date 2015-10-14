@@ -32,18 +32,18 @@ import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 public class LoginService {
     private Context context;
     private LocalUserRep localUserRep;
-    private InstallService installService;
+    private InitService initService;
 
-    public LoginService(Context context, LocalUserRep localUserRep, InstallService installService) {
+    public LoginService(Context context, LocalUserRep localUserRep, InitService initService) {
         this.context = context;
         this.localUserRep = localUserRep;
-        this.installService = installService;
+        this.initService = initService;
     }
 
     public boolean login(String password) throws NoSuchAlgorithmException {
         boolean validatePassword = localUserRep.validatePassword(password);
         if (validatePassword) {
-            this.installService.persistState(InstallState.READY);
+            this.initService.persistState(InstallState.READY);
             this.context.startActivity(new Intent(this.context, Main.class));
         }
         return validatePassword;

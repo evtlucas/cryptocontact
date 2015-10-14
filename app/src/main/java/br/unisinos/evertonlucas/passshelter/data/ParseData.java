@@ -57,9 +57,21 @@ public class ParseData {
     public void saveUser(String email, CertificateBag cert) {
         ParseObject user = new ParseObject("User");
         user.put("email", email);
-        byte[] encoded = cert.getCert().getPublicKey().getEncoded();
+        byte[] encoded = cert.getPublicKey().getEncoded();
         user.put("public_key", encoded);
         user.saveInBackground();
+    }
+
+    public void updateUser(final ParseUser user, final CertificateBag cert) throws ParseException {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+        query.whereEqualTo("email", user.getEmail());
+        List<ParseObject> objects = query.find();
+        if (objects.size() > 0) {
+            ParseObject object = objects.get(0);
+            object.put("email", user.getEmail());
+            object.put("public_key", cert.getPublicKey().getEncoded());
+            object.saveInBackground();
+        }
     }
 
     public void getExternalUsers(final String email, final FinishedFind find) {
@@ -94,7 +106,7 @@ public class ParseData {
         List<ParseObject> list = query.find();
         for(ParseObject user : list) {
             PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
-            listEmail.add(new ParseUser(user.getString("email"), key));
+            listEmail.add(new ParseUser(user.getObjectId(), user.getString("email"), key));
         }
         return listEmail;
     }
@@ -102,16 +114,10 @@ public class ParseData {
     public ParseUser getExternalUser(String email) throws ParseException, NoSuchAlgorithmException,
             InvalidKeySpecException, NoSuchProviderException {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-        query.whereEqualTo("email", email);
-        //query.whereNotEqualTo("email", PassShelterApp.getLocalUser());
-        List<ParseObject> objects = query.find();
-        if (objects.size() == 0)
-            return new ParseUser(null, null);
-        else {
-            ParseObject user = objects.get(0);
-            PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
-            return new ParseUser(user.getString("email"), key);
-        }
+        query.whereStartsWith("email", email.trim());
+        ParseObject user = query.getFirst();
+        PublicKey key = KeyFactory.generatePublicKey(user.getBytes("public_key"));
+        return new ParseUser(user.getObjectId(), user.getString("email"), key);
     }
 
     public void sendExternalResource(ExternalResource externalResource) throws IllegalBlockSizeException,

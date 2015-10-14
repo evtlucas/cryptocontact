@@ -40,10 +40,10 @@ import br.unisinos.evertonlucas.passshelter.data.PersistSecretData;
 import br.unisinos.evertonlucas.passshelter.data.UpdateSecretKey;
 import br.unisinos.evertonlucas.passshelter.encryption.Algorithms;
 import br.unisinos.evertonlucas.passshelter.encryption.AssymetricCryptography;
+import br.unisinos.evertonlucas.passshelter.encryption.KeyStore;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.util.ConfirmationDialog;
-import br.unisinos.evertonlucas.passshelter.util.KeyStoreUtil;
 import br.unisinos.evertonlucas.passshelter.util.SharedPrefUtil;
 
 /**
@@ -55,16 +55,16 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
     private UpdateStatus certStatus;
     private Activity activity;
     private boolean generatePrivateKey = false;
-    private final KeyStoreUtil util;
+    private final KeyStore keyStore;
     private CertificateBag cert = null;
     private SecretKey key = null;
-    private PersistSecretData persist;
+    private PersistSecretData persistSecretData;
 
     public KeyService(UpdateStatus certStatus, Activity activity) {
         this.certStatus = certStatus;
         this.activity = activity;
-        this.util = new KeyStoreUtil(activity);
-        this.persist = new PersistSecretData();
+        this.keyStore = new KeyStore(activity);
+        this.persistSecretData = new PersistSecretData();
     }
 
     public void setUpdateCertificateStatus(UpdateStatus certStatus) {
@@ -76,24 +76,21 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
     }
 
     public SymmetricEncryption getSymmetricEncryption() {
-        readSavedPrivateKey();
-        if (this.key == null)
-            return null;
-        return new SymmetricEncryption(key);
+        if (this.key == null) {
+            readSavedPrivateKey();
+            if (this.key == null)
+                return null;
+        }
+        return new SymmetricEncryption(this.key);
     }
 
     public boolean isCertificateAvailable() {
         return cert.isValid();
     }
 
-    public void installCertificate() {
-        this.util.choosePrivateKeyAlias(this);
-    }
-
     @Override
     public void updateCertificateInfo(CertificateBag cert) {
         this.cert = cert;
-        certStatus.update(isCertificateAvailable());
         if (!this.cert.isValid()) {
             cleanPrivateKey();
             return;
@@ -104,46 +101,51 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
         } else {
             readSavedPrivateKey();
         }
+        certStatus.update(isCertificateAvailable());
     }
 
     private void cleanPrivateKey() {
-        this.persist.cleanPrivateKey(this.activity);
+        this.persistSecretData.cleanPrivateKey(this.activity);
     }
 
     private void readSavedPrivateKey() {
-        this.key = persist.readPrivateKey(this.cert, this.activity);
+        this.key = persistSecretData.readPrivateKey(this.cert, this.activity);
     }
 
     private void createSavePrivateKey() {
-        this.key = persist.savePrivateKey(this.cert, this.activity);
+        this.key = persistSecretData.savePrivateKey(this.cert, this.activity);
     }
 
-    private String getAlias() {
-        return persist.readAlias(this.activity, SharedPrefUtil.KEYCHAIN_PREF, SharedPrefUtil.KEYCHAIN_PREF_ALIAS);
+    public String getAlias() {
+        return persistSecretData.readAlias(this.activity, SharedPrefUtil.KEYCHAIN_PREF, SharedPrefUtil.KEYCHAIN_PREF_ALIAS);
     }
 
-    private void readCertificate(String alias) throws ExecutionException, InterruptedException {
-        util.readCertificate(this, alias);
+    private void readCertificate() throws ExecutionException, InterruptedException {
+        keyStore.readCertificate(this);
+    }
+
+    public void installCertificate(String email) {
+        this.keyStore.generateInstallCertificate(this, email);
+        generatePrivateKey = true;
     }
 
     @Override
     public void alias(String alias) {
-        // This method is called as a callback for KeyChain.choosePrivateKeyAlias
-        persist.writeAlias(this.activity, SharedPrefUtil.KEYCHAIN_PREF, SharedPrefUtil.KEYCHAIN_PREF_ALIAS, alias);
+        persistSecretData.writeAlias(this.activity, SharedPrefUtil.KEYCHAIN_PREF, SharedPrefUtil.KEYCHAIN_PREF_ALIAS, alias);
         try {
-            readCertificate(alias);
+            readCertificate();
             generatePrivateKey = true;
         } catch (Exception e) {
-            cert = new CertificateBag(null, null);
+            cert = new CertificateBag();
             Log.e(this.activity.getResources().getString(R.string.app_name), "Error during KeyService definition", e);
         }
     }
 
     public void reReadCertificate() {
         try {
-            readCertificate(getAlias());
+            readCertificate();
         } catch (Exception e) {
-            cert = new CertificateBag(null, null);
+            cert = new CertificateBag();
             Log.e(this.activity.getResources().getString(R.string.app_name), "Error during KeyService new read", e);
         }
     }
@@ -174,8 +176,7 @@ public class KeyService implements UpdateCertificate, KeyChainAliasCallback, Upd
     }
 
     public void loadCertificate() throws ExecutionException, InterruptedException {
-        readCertificate(getAlias());
-        //certStatus.update(isCertificateAvailable());
+        readCertificate();
     }
 
     public CertificateBag getCertificateBag() {

@@ -84,7 +84,7 @@ public class UsersNewGroupActivity extends AppCompatActivity implements Confirma
             if (group != null) {
                 foundGroup = true;
                 for(User user : group.getUsers()) {
-                    ParseUser parseUser = new ParseUser(user.getEmail(), user.getPublicKey());
+                    ParseUser parseUser = new ParseUser(user.getRemoteId(), user.getEmail(), user.getPublicKey());
                     emailUsersGroup.add(parseUser);
                 }
                 refreshListAdapter();

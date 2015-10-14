@@ -56,7 +56,7 @@ public class VerifyProcessAsyncTask  extends AsyncTask<Void, Void, Boolean> {
         try {
             verifyResourceService.verifyResource();
         } catch (NotFoundException e) {
-            return false;
+            return true;
         } catch (Exception e) {
             ShowLogExceptionUtil.logException(this.context, "Exceção ao verificar recursos", e);
             return false;

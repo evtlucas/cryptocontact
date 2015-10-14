@@ -29,7 +29,6 @@ import br.unisinos.evertonlucas.passshelter.app.AppConfig;
 public class ParseUtil {
 
     public static void registerParse(Context context) {
-        Parse.enableLocalDatastore(context);
         Parse.initialize(context, AppConfig.APPLICATION_ID, AppConfig.CLIENT_KEY);
     }
 }

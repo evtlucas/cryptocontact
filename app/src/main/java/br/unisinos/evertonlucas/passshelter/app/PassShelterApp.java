@@ -19,6 +19,7 @@ package br.unisinos.evertonlucas.passshelter.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -29,8 +30,9 @@ import br.unisinos.evertonlucas.passshelter.analytics.AnalyticsTrackers;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.encryption.SymmetricEncryption;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
-import br.unisinos.evertonlucas.passshelter.service.InstallService;
+import br.unisinos.evertonlucas.passshelter.service.InitService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
+import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
 
 /**
  * Class designed for control the application start process
@@ -38,7 +40,7 @@ import br.unisinos.evertonlucas.passshelter.service.KeyService;
  */
 public class PassShelterApp extends Application implements Serializable {
 
-    private InstallService service = null;
+    private InitService initService = null;
     private static PassShelterApp singleton;
     private KeyService keyService = null;
     private LocalUserRep localUserRepository = null;
@@ -51,16 +53,22 @@ public class PassShelterApp extends Application implements Serializable {
     public void onCreate() {
         super.onCreate();
         singleton = this;
-        service = new InstallService(this.getApplicationContext());
-        service.initialize();
-
-        initializeGoogleAnalytics();
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            int versionCode = packageInfo.versionCode;
+            boolean firstInstallation = Math.abs(System.currentTimeMillis() - packageInfo.firstInstallTime) < 20000;
+            initalizeGoogleAnalytics(this.getApplicationContext());
+            initService = new InitService(this.getApplicationContext(), versionCode, firstInstallation);
+            initService.initialize();
+        } catch (Exception e) {
+            ShowLogExceptionUtil.logException(this.getApplicationContext(), "Erro ao inicializar Pass Shelter", e);
+        }
     }
 
-    private void initializeGoogleAnalytics() {
-        AnalyticsTrackers.initialize(this.getApplicationContext());
+    public static void initalizeGoogleAnalytics(Context context) {
+        AnalyticsTrackers.initialize(context);
 
-        analytics = GoogleAnalytics.getInstance(this);
+        analytics = GoogleAnalytics.getInstance(context);
         analytics.setLocalDispatchPeriod(1800);
 
         tracker = analytics.newTracker("UA-68582236-1"); // Replace with actual tracker/property Id
@@ -73,8 +81,8 @@ public class PassShelterApp extends Application implements Serializable {
         return singleton;
     }
 
-    public InstallService getInstallService() {
-        return service;
+    public InitService getInstallService() {
+        return initService;
     }
 
     public KeyService getKeyService() {

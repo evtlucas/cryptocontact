@@ -19,6 +19,7 @@ package br.unisinos.evertonlucas.passshelter.service;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.net.ConnectException;
@@ -30,9 +31,14 @@ import br.unisinos.evertonlucas.passshelter.app.InstallState;
 import br.unisinos.evertonlucas.passshelter.app.InstallStepFinished;
 import br.unisinos.evertonlucas.passshelter.app.LoginActivity;
 import br.unisinos.evertonlucas.passshelter.app.PassShelterApp;
+import br.unisinos.evertonlucas.passshelter.app.UpdateActivity;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
+import br.unisinos.evertonlucas.passshelter.model.ParseUser;
+import br.unisinos.evertonlucas.passshelter.rep.GroupsRep;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
+import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
+import br.unisinos.evertonlucas.passshelter.rep.UserRep;
 import br.unisinos.evertonlucas.passshelter.util.NetworkUtil;
 import br.unisinos.evertonlucas.passshelter.util.ParseUtil;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
@@ -44,12 +50,18 @@ import br.unisinos.evertonlucas.passshelter.util.ToastUtil;
  * Class designed for manage initialization process
  * Created by everton on 06/09/15.
  */
-public class InstallService implements InstallStepFinished, Serializable {
+public class InitService implements InstallStepFinished, Serializable {
 
     private Context context;
+    private final int versionCode;
+    private final boolean firstInstallation;
+    private boolean updateNeeded;
 
-    public InstallService(Context context) {
+    public InitService(Context context, int versionCode, boolean firstInstallation) {
         this.context = context;
+        this.versionCode = versionCode;
+        this.firstInstallation = firstInstallation;
+        this.updateNeeded = new UpdateService(this.context, this.versionCode, this.firstInstallation).isUpdateNeeded();
         ParseUtil.registerParse(this.context);
     }
 
@@ -71,7 +83,21 @@ public class InstallService implements InstallStepFinished, Serializable {
 
     public void initialize() {
         InstallState installState = getInstallState();
+        if (this.updateNeeded) {
+            installState = prepareUpdate();
+            new UpdateService(this.context, this.versionCode, this.firstInstallation).update(null, null);
+        }
         startActivityFromState(installState);
+    }
+
+    @NonNull
+    private InstallState prepareUpdate() {
+        new GroupsRep(this.context).deleteAll();
+        new UserRep(this.context).deleteAll();
+        new ResourceRep(this.context, null).deleteAll();
+        InstallState installState = InstallState.INITIAL;
+        persistState(installState);
+        return installState;
     }
 
     private void sendUserToCloud() {
@@ -83,7 +109,11 @@ public class InstallService implements InstallStepFinished, Serializable {
             String email = localUserRep.getUser();
             CertificateBag cert = keyService.getCertificateBag();
             ParseData parseData = new ParseData();
-            parseData.saveUser(email, cert);
+            ParseUser user = parseData.getExternalUser(email);
+            if (user.isValid())
+                parseData.updateUser(user, cert);
+            else
+                parseData.saveUser(email, cert);
             finished(InstallState.USER_CLOUD);
             dialog.dismiss();
         } catch (ConnectException e) {
@@ -107,17 +137,29 @@ public class InstallService implements InstallStepFinished, Serializable {
                 sendUserToCloud();
                 break;
             case USER_CLOUD: case READY:
-                Intent intent = new Intent(this.context, LoginActivity.class);
-                if (installState == InstallState.USER_CLOUD) {
-                    intent.putExtra("init", false);
-                    persistState(InstallState.USER_CLOUD);
-                } else {
-                    intent.putExtra("init", true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
-                context.startActivity(intent);
+                startLogin(installState);
                 break;
         }
+    }
+
+    private void startUpdateActivity() {
+        Intent intent = new Intent(this.context, UpdateActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("version_code", this.versionCode);
+        intent.putExtra("first_installation", this.firstInstallation);
+        this.context.startActivity(intent);
+    }
+
+    private void startLogin(InstallState installState) {
+        Intent intent = new Intent(this.context, LoginActivity.class);
+        if (installState == InstallState.USER_CLOUD) {
+            intent.putExtra("init", false);
+            persistState(InstallState.USER_CLOUD);
+        } else {
+            intent.putExtra("init", true);
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
     }
 
     @Override
@@ -129,9 +171,5 @@ public class InstallService implements InstallStepFinished, Serializable {
     public void persistState(InstallState state) {
         // The context present in the class is not prepared to write in SharedPreferences
         SharedPrefUtil.writeIntTo(context, SharedPrefUtil.KEYCHAIN_PREF, SharedPrefUtil.KEYCHAIN_PREF_STATE, state.ordinal());
-    }
-
-    public void cancel() {
-        System.exit(0);
     }
 }

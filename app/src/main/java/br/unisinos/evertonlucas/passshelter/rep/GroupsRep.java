@@ -158,6 +158,13 @@ public class GroupsRep {
         db.close();
     }
 
+    public void deleteAll() {
+        db = dbHelper.getWritableDatabase();
+        db.delete(DbHelper.GROUPS, null, null);
+        db.delete(DbHelper.USERS_GROUPS, null, null);
+        db.close();
+    }
+
     public void save(Group group) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
         if (group.getId() != null)
             update(group);

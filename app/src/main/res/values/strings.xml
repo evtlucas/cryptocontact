@@ -60,23 +60,29 @@ limitations under the License.
     <string name="send_resource">Enviar recurso</string>
     <string name="wait_emails">Pesquisando emails informados</string>
 
-    <string name="title_activity_resource">Cadastro de Recurso</string>
+    <string name="title_activity_resource">Recurso</string>
     <string name="title_activity_send_resource">Enviar recurso</string>
+    <string name="title_activity_main">Recursos</string>
+    <string name="title_activity_group">Grupo</string>
+    <string name="title_activity_groups">Grupos</string>
+    <string name="title_activity_activity_new_group">Novo Grupo</string>
+    <string name="title_activity_users_new_group">Usuários</string>
+    <string name="title_activity_users_group">Usuários</string>
+    <string name="title_activity_send_resource_group">Envio para grupo</string>
+    <string name="title_activity_update">Atualização</string>
+
     <string name="txt_send_resource">Enviar recurso</string>
     <string name="process_send_resource">Enviando recurso</string>
     <string name="process_verify_resources">Verificando novos recursos</string>
     <string name="generate_key">Gerar nova chave</string>
-    <string name="title_activity_groups">Grupos</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="add_resource">Adicionar recursos</string>
     <string name="add_group">Novo grupo</string>
-    <string name="title_activity_activity_new_group">Novo Grupo</string>
     <string name="lbl_name_group">Nome do Grupo</string>
     <string name="lbl_next_step_new_group">Avançar</string>
     <string name="name_new_group_blank">Nome do grupo não pode ficar em branco</string>
-    <string name="title_activity_users_new_group">Usuários</string>
     <string name="name_new_group_found">Grupo já existe</string>
     <string name="lbl_users_group">Usuários</string>
     <string name="confirmation_new_user">Confirmar inserção</string>
@@ -84,15 +90,13 @@ limitations under the License.
     <string name="create_group">Criar</string>
     <string name="save_group_not_allowed">Grupo não pode ser salvo</string>
     <string name="saving_group">Aguarde enquanto o grupo é salvo</string>
-    <string name="title_activity_group">GroupActivity</string>
     <string name="lbl_admin_group">Administrador</string>
     <string name="lbl_action_edit_users_group">Alterar</string>
     <string name="lbl_action_save_group">Salvar grupo</string>
-    <string name="title_activity_users_group">UsersGroupActivity</string>
     <string name="finish_users_group_edition">Alterar</string>
     <string name="lbl_action_delete_group">Excluir grupo</string>
     <string name="delete_group_confirmation">Confirma a exclusão do grupo?</string>
-    <string name="title_activity_send_resource_group">Envio para grupo</string>
     <string name="send_resource_to_group">Enviar para grupo</string>
     <string name="msg_no_connection">Sem conexão</string>
+    <string name="text_update">Aguarde enquanto o Pass Shelter é atualizado.</string>
 </resources>

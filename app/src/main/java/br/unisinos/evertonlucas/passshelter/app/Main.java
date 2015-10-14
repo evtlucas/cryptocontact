@@ -86,48 +86,6 @@ public class Main extends AppCompatActivity implements UpdateStatus{
         }
     }
 
-    private void loadListView() throws InvalidKeyException, BadPaddingException,
-            NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
-        loadListAdapter(listView, this.resourceRep.getAllResources(), R.layout.list_resources);
-    }
-
-    private void createListView() {
-        this.listView = (ListView) findViewById(R.id.list_view_main);
-        this.listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        this.listView.setLongClickable(true);
-        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    Map<String, String> resMap = (Map<String, String>) parent.getItemAtPosition(position);
-                    Resource res = resourceRep.getResourceByName(resMap.get("name"));
-                    Intent intent = new Intent(myContext, ResourceActivity.class);
-                    intent.putExtra("name", res.getName());
-                    myContext.startActivity(intent);
-                } catch (Exception e) {
-                    ShowLogExceptionUtil.showAndLogException(myContext, "Erro ao abrir recurso para edição", e);
-                }
-            }
-        });
-    }
-
-    public void loadListAdapter(ListView listView, List<Resource> resources, int resource) {
-        String[] from = { "name" };
-        int[] to = { R.id.txtResLabel };
-        SimpleAdapter adapter = new SimpleAdapter(this, listResources(resources), resource, from, to);
-        listView.setAdapter(adapter);
-    }
-
-    private List<? extends Map<String, String>> listResources(List<Resource> resources) {
-        List<Map<String, String>> mapList = new ArrayList<>();
-        for (Resource resource : resources) {
-            Map<String, String> map = new HashMap<>();
-            map.put("name", resource.getName());
-            mapList.add(map);
-        }
-        return mapList;
-    }
-
     @Override
     protected void onResume() {
         this.service.reReadCertificate();
@@ -170,6 +128,48 @@ public class Main extends AppCompatActivity implements UpdateStatus{
         return super.onOptionsItemSelected(item);
     }
 
+    private void loadListView() throws InvalidKeyException, BadPaddingException,
+            NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
+        loadListAdapter(listView, this.resourceRep.getAllResources(), R.layout.list_resources);
+    }
+
+    private void createListView() {
+        this.listView = (ListView) findViewById(R.id.list_view_main);
+        this.listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        this.listView.setLongClickable(true);
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    Map<String, String> resMap = (Map<String, String>) parent.getItemAtPosition(position);
+                    Resource res = resourceRep.getResourceByName(resMap.get("name"));
+                    Intent intent = new Intent(myContext, ResourceActivity.class);
+                    intent.putExtra("name", res.getName());
+                    myContext.startActivity(intent);
+                } catch (Exception e) {
+                    ShowLogExceptionUtil.showAndLogException(myContext, "Erro ao abrir recurso para edição", e);
+                }
+            }
+        });
+    }
+
+    public void loadListAdapter(ListView listView, List<Resource> resources, int resource) {
+        String[] from = { "name" };
+        int[] to = { R.id.txtResLabel };
+        SimpleAdapter adapter = new SimpleAdapter(this, listResources(resources), resource, from, to);
+        listView.setAdapter(adapter);
+    }
+
+    private List<? extends Map<String, String>> listResources(List<Resource> resources) {
+        List<Map<String, String>> mapList = new ArrayList<>();
+        for (Resource resource : resources) {
+            Map<String, String> map = new HashMap<>();
+            map.put("name", resource.getName());
+            mapList.add(map);
+        }
+        return mapList;
+    }
+
     private void startResourceActivity() {
         AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "startResourceActivity");
         startActivity(new Intent(this, ResourceActivity.class));
@@ -202,10 +202,11 @@ public class Main extends AppCompatActivity implements UpdateStatus{
                     .execute();
         } catch (ConnectException e) {
             ToastUtil.showToastMessage(this, getResources().getString(R.string.msg_no_connection));
+            this.progressDialog.dismiss();
         } catch (Exception e) {
             ShowLogExceptionUtil.showAndLogException(this, "Erro ao verificar recursos", e);
+            this.progressDialog.dismiss();
         }
-        this.progressDialog.dismiss();
     }
 
     @Override
