@@ -18,8 +18,8 @@ android {
         applicationId "br.unisinos.evertonlucas.passshelter"
         minSdkVersion 19
         targetSdkVersion 22
-        versionName 'Alfa 0.5'
-        versionCode 5
+        versionName 'Alfa 0.6'
+        versionCode 6
     }
     buildTypes {
         release {
