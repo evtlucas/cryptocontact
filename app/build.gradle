@@ -18,8 +18,8 @@ android {
         applicationId "br.unisinos.evertonlucas.passshelter"
         minSdkVersion 19
         targetSdkVersion 22
-        versionName 'Alfa 0.6'
-        versionCode 6
+        versionName 'Alfa 0.8'
+        versionCode 8
     }
     buildTypes {
         release {
@@ -53,6 +53,5 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.2.1'
     compile 'com.parse:parse-android:1.10.1'
     compile 'org.apache.commons:commons-lang3:3.0'
-    compile 'com.google.android.gms:play-services-analytics:8.1.0'
     compile 'com.android.support:design:22.2.1'
 }

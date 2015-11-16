@@ -43,7 +43,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import br.unisinos.evertonlucas.passshelter.R;
-import br.unisinos.evertonlucas.passshelter.analytics.AnalyticsMessage;
 import br.unisinos.evertonlucas.passshelter.async.UpdateStatus;
 import br.unisinos.evertonlucas.passshelter.async.VerifyProcessAsyncTask;
 import br.unisinos.evertonlucas.passshelter.data.ExportSecretKeyData;
@@ -88,7 +87,7 @@ public class Main extends AppCompatActivity implements UpdateStatus{
 
     @Override
     protected void onResume() {
-        this.service.reReadCertificate();
+        //this.service.reReadCertificate();
         super.onResume();
     }
 
@@ -171,13 +170,11 @@ public class Main extends AppCompatActivity implements UpdateStatus{
     }
 
     private void startResourceActivity() {
-        AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "startResourceActivity");
         startActivity(new Intent(this, ResourceActivity.class));
     }
 
     private void startGroupsActivity() {
         try {
-            AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "startGroupsActivity");
             Intent intent = new Intent(this, GroupsActivity.class);
             startActivity(intent);
         } catch (Exception e) {
@@ -196,7 +193,6 @@ public class Main extends AppCompatActivity implements UpdateStatus{
     private void verifyResources() {
         this.progressDialog = ProgressDialogUtil.createProgressDialog(this, getString(R.string.process_verify_resources));
         try {
-            AnalyticsMessage.sendMessageToAnalytics("Main", "UX", "verifyResources");
             NetworkUtil.verifyNetwork(this);
             new VerifyProcessAsyncTask(this, service, resourceRep, this, new ParseData(), localUserRep)
                     .execute();

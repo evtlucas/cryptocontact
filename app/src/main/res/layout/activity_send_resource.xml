@@ -38,6 +38,8 @@ limitations under the License.
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/horizontal_app_margin"
         android:layout_marginRight="@dimen/horizontal_app_margin"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
         android:text="" />
 
     <GridLayout

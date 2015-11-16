@@ -10,15 +10,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".app.PassShelterApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <activity
             android:name=".app.InitActivity"
             android:configChanges="orientation"
@@ -26,15 +21,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoDisplay"
             android:windowSoftInputMode="stateHidden" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".app.Main"
-            android:label="@string/title_activity_main" >
+            android:label="@string/app_name" >
+
         </activity>
         <activity
             android:name=".app.DigCertActivity"
@@ -47,6 +38,11 @@
         <activity
             android:name=".app.LoginActivity"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".app.ResourceActivity"
@@ -104,10 +100,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.unisinos.evertonlucas.passshelter.app.ResourceActivity" />
         </activity>
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".app.UpdateActivity"

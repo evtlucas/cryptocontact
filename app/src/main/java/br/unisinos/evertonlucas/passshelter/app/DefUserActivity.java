@@ -49,7 +49,7 @@ public class DefUserActivity extends AppCompatActivity implements UpdateStatus {
         this.edtEmail = (EditText) findViewById(R.id.edtEmail);
         this.edtPassword = (EditText) findViewById(R.id.edtPassword);
 
-        this.initService = PassShelterApp.getInstance().getInstallService();
+        this.initService = PassShelterApp.getInstance().getInitService();
         try {
             this.keyService = PassShelterApp.createKeyService(this, this);
             //this.keyService.loadCertificate();

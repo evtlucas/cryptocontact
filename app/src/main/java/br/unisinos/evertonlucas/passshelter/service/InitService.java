@@ -31,7 +31,6 @@ import br.unisinos.evertonlucas.passshelter.app.InstallState;
 import br.unisinos.evertonlucas.passshelter.app.InstallStepFinished;
 import br.unisinos.evertonlucas.passshelter.app.LoginActivity;
 import br.unisinos.evertonlucas.passshelter.app.PassShelterApp;
-import br.unisinos.evertonlucas.passshelter.app.UpdateActivity;
 import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.model.CertificateBag;
 import br.unisinos.evertonlucas.passshelter.model.ParseUser;
@@ -89,7 +88,8 @@ public class InitService implements InstallStepFinished, Serializable {
                 installState = prepareUpdate();
             updateService.writeCurrentVersion();
         }
-        startActivityFromState(installState);
+        if ((installState != InstallState.USER_CLOUD) && (installState != InstallState.READY))
+            startActivityFromState(installState);
     }
 
     @NonNull
@@ -142,14 +142,6 @@ public class InitService implements InstallStepFinished, Serializable {
                 startLogin(installState);
                 break;
         }
-    }
-
-    private void startUpdateActivity() {
-        Intent intent = new Intent(this.context, UpdateActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("version_code", this.versionCode);
-        intent.putExtra("first_installation", this.firstInstallation);
-        this.context.startActivity(intent);
     }
 
     private void startLogin(InstallState installState) {

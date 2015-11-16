@@ -16,13 +16,14 @@ limitations under the License.
 
 package br.unisinos.evertonlucas.passshelter.app;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
@@ -33,38 +34,45 @@ import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.service.InitService;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
 import br.unisinos.evertonlucas.passshelter.service.LoginService;
-import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
-
-import static br.unisinos.evertonlucas.passshelter.app.PassShelterApp.getInstance;
 
 public class LoginActivity extends AppCompatActivity implements UpdateStatus {
 
     private LocalUserRep localUserRep;
     private EditText txtLoginPassword;
     private InitService initService;
-    private ProgressDialog progressDialog;
     private KeyService keyService;
     private LoginService loginService;
+    private TextView txtLoginMessage;
+    private Button btnDefUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Bundle extras = getIntent().getExtras();
-        boolean init = extras.getBoolean("init");
         this.txtLoginPassword = (EditText) findViewById(R.id.txtLoginPassword);
+        this.txtLoginMessage = (TextView) findViewById(R.id.txt_login_messages);
+        this.btnDefUser = (Button) findViewById(R.id.btnDefUser);
 
-        this.initService = getInstance().getInstallService();
+        this.initService = PassShelterApp.build(this).getInitService();
         this.keyService = PassShelterApp.createKeyService(this, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         try {
-            this.progressDialog = ProgressDialogUtil.createProgressDialog(this, "Aguarde a leitura do Certificado Digital");
+            setTxtLoginMessage("Aguarde a leitura do Certificado Digital");
+            btnDefUser.setEnabled(false);
             this.keyService.loadCertificate();
         } catch (Exception e) {
             ShowLogExceptionUtil.showAndLogException(this, "Erro ao iniciar tela de cadastro do usuário", e);
         }
+    }
 
+    private void setTxtLoginMessage(String message) {
+        this.txtLoginMessage.setText(message);
     }
 
     @Override
@@ -104,7 +112,8 @@ public class LoginActivity extends AppCompatActivity implements UpdateStatus {
 
     @Override
     public void update(boolean status) {
-        progressDialog.dismiss();
+        setTxtLoginMessage("");
+        btnDefUser.setEnabled(true);
         this.initService.setContext(this);
         this.localUserRep = PassShelterApp.createUserRep(this, keyService.getSymmetricEncryption());
         this.loginService = new LoginService(this, this.localUserRep, this.initService);

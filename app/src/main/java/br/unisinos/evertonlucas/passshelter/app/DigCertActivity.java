@@ -35,7 +35,7 @@ public class DigCertActivity extends AppCompatActivity implements UpdateStatus {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dig_cert);
 
-        this.initService = PassShelterApp.getInstance().getInstallService();
+        this.initService = PassShelterApp.getInstance().getInitService();
     }
 
     @Override

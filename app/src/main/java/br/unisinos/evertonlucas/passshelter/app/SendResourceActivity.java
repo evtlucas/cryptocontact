@@ -42,6 +42,7 @@ import br.unisinos.evertonlucas.passshelter.data.ParseData;
 import br.unisinos.evertonlucas.passshelter.rep.LocalUserRep;
 import br.unisinos.evertonlucas.passshelter.rep.ResourceRep;
 import br.unisinos.evertonlucas.passshelter.service.KeyService;
+import br.unisinos.evertonlucas.passshelter.util.KeyboardUtil;
 import br.unisinos.evertonlucas.passshelter.util.NetworkUtil;
 import br.unisinos.evertonlucas.passshelter.util.ProgressDialogUtil;
 import br.unisinos.evertonlucas.passshelter.util.ShowLogExceptionUtil;
@@ -114,6 +115,7 @@ public class SendResourceActivity extends AppCompatActivity implements FinishedF
         try {
             NetworkUtil.verifyNetwork(this);
             parseData.getExternalUsers(this.txtDestinationEmail.getText().toString(), this);
+            KeyboardUtil.hideKeyboard(this, view);
         } catch (ConnectException e) {
             ToastUtil.showToastMessage(this, getResources().getString(R.string.msg_no_connection));
         } catch (Exception e) {

@@ -22,7 +22,7 @@ public class UpdateActivity extends AppCompatActivity implements UpdateStatus {
         int versionCode = getIntent().getExtras().getInt("version_code");
         boolean firstInstallation = getIntent().getExtras().getBoolean("first_installation");
 
-        this.initService = PassShelterApp.getInstance().getInstallService();
+        this.initService = PassShelterApp.getInstance().getInitService();
 
         try {
             keyService = PassShelterApp.createKeyService(this, this);
